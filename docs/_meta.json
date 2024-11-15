@@ -1,0 +1,16 @@
+[
+  {
+    "text": "文章",
+    "link": "/article/tec-doc/Git命令.html",
+    "activeMatch": "/article/"
+  },
+  {
+    "text": "白板",
+    "link": "/WhiteBoard/",
+    "activeMatch": "/WhiteBoard/"
+  },
+  {
+    "text": "旧版",
+    "link": "http://youngya.top"
+  }
+]

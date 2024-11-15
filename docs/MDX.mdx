@@ -1,0 +1,47 @@
+import {Calendar, Carousel, Image} from "antd";
+import CmdTab from "./components/PackageManagerTabs";
+import {WaterMark} from '@ant-design/pro-components';
+
+# Markdown xml
+
+## mdx page
+
+<div>
+  <p>This is a paragraph</p>
+</div>
+
+## Image
+<div style={{textAlign:'center'}}>
+  <Image
+    width={200}
+    src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
+  />
+</div>
+
+## CmdTab
+
+<CmdTab command={"install youngya -D"}/>
+
+## Calendar
+
+<Calendar/>
+
+<WaterMark content={"YoungYa"}>
+  <Carousel arrows autoplay draggable fade infinite>
+    <div>
+      <Image src={"https://pic2.zhimg.com/v2-5fb13110e1de13d4c11e6e7f5b8026da_r.jpg"}/>
+    </div>
+    <div>
+      <Image
+        src={"https://ts1.cn.mm.bing.net/th/id/R-C.57384e4c2dd256a755578f00845e60af?rik=uy9%2bvT4%2b7Rur%2fA&riu=http%3a%2f%2fimg06file.tooopen.com%2fimages%2f20171224%2ftooopen_sy_231021357463.jpg&ehk=whpCWn%2byPBvtGi1%2boY1sEBq%2frEUaP6w2N5bnBQsLWdo%3d&risl=&pid=ImgRaw&r=0"}/>
+    </div>
+    <div>
+      <Image
+        src={"https://desk-fd.zol-img.com.cn/t_s960x600c5/g5/M00/02/04/ChMkJ1bKyEyIMaKUAAhskHwWGqUAALIAAM2KsIACGyo249.jpg"}/>
+    </div>
+    <div>
+      <Image
+        src={"https://ts1.cn.mm.bing.net/th/id/R-C.987f582c510be58755c4933cda68d525?rik=C0D21hJDYvXosw&riu=http%3a%2f%2fimg.pconline.com.cn%2fimages%2fupload%2fupc%2ftx%2fwallpaper%2f1305%2f16%2fc4%2f20990657_1368686545122.jpg&ehk=netN2qzcCVS4ALUQfDOwxAwFcy41oxC%2b0xTFvOYy5ds%3d&risl=&pid=ImgRaw&r=0"}/>
+    </div>
+  </Carousel>
+</WaterMark>

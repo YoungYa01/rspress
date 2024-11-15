@@ -1,0 +1,22 @@
+[
+  {
+    "type": "dir",
+    "name": "tec-doc",
+    "label": "技术文档",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "interview-book",
+    "label": "面经",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "interview",
+    "label": "面试",
+    "collapsible": true,
+    "collapsed": true
+  }
+]
