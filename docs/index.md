@@ -27,13 +27,15 @@ features:
   - title: 面经
     details: 准备面试前看的一些面经文档
     icon: 📦
-  - title: 杨
-    details: 
+    link: /article/interview-book/html.html
+  - title: React
+    details: 一个React钟爱粉，喜欢写React，但不喜欢记笔记
     icon: 🌍
-  - title: 景
-    details: 
+  - title: 毕业设计
+    details: 毕业设计相关的内容，相关文档文献的记录
     icon: 🌈
-  - title: 辉
-    details: 
+    link: /article/毕业设计/选题文档.html
+  - title: 面试
+    details: 面试相关的内容，记录曾经面试相关的内容
     icon: 🔥
 ---

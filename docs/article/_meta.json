@@ -18,5 +18,12 @@
     "label": "面试",
     "collapsible": true,
     "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "毕业设计",
+    "label": "毕业设计",
+    "collapsible": true,
+    "collapsed": true
   }
 ]

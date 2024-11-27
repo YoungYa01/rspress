@@ -16,8 +16,8 @@ import toc from 'rspress-plugin-toc';
 export default defineConfig({
   root: path.join(__dirname, 'docs'),
   title: "YoungYa's doc web site" ,
-  description: 'Rspack-based Static Site Generator',
-  icon: '/rspress-icon.png',
+  description: "YoungYa's blog System in use of recording some of documents",
+  icon: '/longbg.png',
   logo: {
     light: '/longbg.png',
     dark: '/logobai.png',
