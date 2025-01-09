@@ -10,7 +10,11 @@
     "activeMatch": "/WhiteBoard/"
   },
   {
+    "text": "XMind在线",
+    "link": "/XMind/"
+  },
+  {
     "text": "旧版",
-    "link": "http://youngya.top"
+    "link": "/blank/"
   }
 ]

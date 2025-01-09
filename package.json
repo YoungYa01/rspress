@@ -18,7 +18,8 @@
     "rspress": "^1.35.3",
     "rspress-plugin-align-image": "^0.3.0",
     "rspress-plugin-reading-time": "^0.3.0",
-    "rspress-plugin-toc": "^0.3.0"
+    "rspress-plugin-toc": "^0.3.0",
+    "xmind-embed-viewer": "^1.2.0"
   },
   "devDependencies": {
     "@rspress/plugin-last-updated": "^1.35.4",

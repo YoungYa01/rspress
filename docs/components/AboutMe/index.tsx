@@ -82,7 +82,7 @@ const AboutMe = () => {
       />
       <Divider variant="dotted" style={{borderColor: '#7cb305'}}>
         <Button
-          color={"danger"} variant="dashed"
+          type={'primary'} size={'large'}
           onClick={() => window.location.href = "/article/tec-doc/CSS相关/Tailwind_CSS.html"}
         >
           To Article
