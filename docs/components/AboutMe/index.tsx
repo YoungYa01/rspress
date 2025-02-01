@@ -6,16 +6,22 @@ import {
   Watermark,
   Divider,
   notification,
-  Badge
+  Badge, Flex
 } from "antd";
 import {useState} from "react";
+import {useDark} from 'rspress/runtime';
 import SmileIcon from "../SmileIcon";
 import FlowerIcon from "../FlowerIcon";
 import SunFlowerIcon from "../SunFlowerIcon";
+import SplashCursor from "../SplashCursor";
+import LogoWall from "../LogoWall";
+import SplitText from "../SplitText";
+import MagnetLines from "../MagnetLines";
 
 const AboutMe = () => {
   const [avatarSrc, setAvatarSrc] = useState<string>(`/pic${[1, 2, 3, 4].at(parseInt(String(Math.random() * 4)))}.jpg`);
   const [loading, setLoading] = useState<boolean>(false);
+  const dark = useDark();
   const handleClick = () => {
     setLoading(true);
     setTimeout(() => {
@@ -40,8 +46,8 @@ const AboutMe = () => {
   const IconList = () => {
     return (
       <div>
-        <SmileIcon/>
-        <FlowerIcon/>
+        {/*<SmileIcon/>*/}
+        {/*<FlowerIcon/>*/}
         <SunFlowerIcon/>
       </div>
     )
@@ -88,15 +94,31 @@ const AboutMe = () => {
           To Article
         </Button>
       </Divider>
-      <Carousel autoplay arrows adaptiveHeight draggable fade infinite>
-        {
-          [1, 2, 3, 4].map((item) => (
-            <div>
-              <img src={`/pic${item}.jpg`}/>
-            </div>
-          ))
-        }
-      </Carousel>
+
+      <LogoWall
+        // @ts-ignore
+        items={[1, 2, 3, 4].map((item) => ({imgUrl: `/pic${item}.jpg`, altText: `pic${item}`}))}
+        direction='horizontal'
+        pauseOnHover={true}
+        // size='clamp(8rem, 1rem + 20vmin, 25rem)'
+        duration='60s'
+        bgColor={dark ? '#191d24' : '#fdfffd'}
+        bgAccentColor={dark ? '#191d24' : '#fdfffd'}
+      ></LogoWall>
+
+      <Flex justify={'center'} align={'center'}>
+        <MagnetLines containerSize={"90vmin"}/>
+      </Flex>
+      {/*<Carousel autoplay arrows adaptiveHeight draggable fade infinite>*/}
+      {/*  {*/}
+      {/*    [1, 2, 3, 4].map((item) => (*/}
+      {/*      <div>*/}
+      {/*        <img src={`/pic${item}.jpg`}/>*/}
+      {/*      </div>*/}
+      {/*    ))*/}
+      {/*  }*/}
+      {/*</Carousel>*/}
+      <SplashCursor/>
     </Watermark>
   )
 }

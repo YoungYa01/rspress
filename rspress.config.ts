@@ -25,7 +25,7 @@ export default defineConfig({
   themeConfig: {
     socialLinks: [
       {icon: 'github', mode: 'link', content: 'https://github.com/YoungYa01'},
-      {icon: 'qq', mode: 'dom', content: '1829594026',},
+      {icon: 'qq', mode: 'text', content: '1829594026',},
     ],
     enableContentAnimation: true,
     enableAppearanceAnimation: true,

@@ -1,8 +1,8 @@
 # 🎈TailWind CSS
 
-$$
+:::info
 只需书写 HTML 代码，无需书写 CSS，即可快速构建美观的网站。
-$$
+:::
 
 ## 💞一、创建项目+vite
 
@@ -101,17 +101,17 @@ import './tailwind.css'
 
 ## 🐧六、开始使用tailwind css
 
-$$
+::: info
 让css停不下来
-$$
+:::
 
-```html
+```javascript
 <h1 className="text-3xl font-bold underline">Hello world!</h1>
 ```
 
 这样你就得到了一个具有以下css属性的`Hello world!`
 
-```css
+```css 
 font-size: 1.875rem;
 line-height: 2.25rem;
 font-weight: 700;
@@ -120,7 +120,7 @@ text-decoration-line: underline;
 
 下面我们将画一个32px宽，32px高，蓝色的盒子
 
-```html
+```javascript
 <div className="w-32 h-32 bg-blue-500"></div>
 ```
 

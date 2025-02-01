@@ -1,0 +1,53 @@
+import {Tab, Tabs} from 'rspress/theme';
+import {Typography} from 'antd'
+
+# Deno 初尝
+
+> deno是 Node.js 的替代品。有了它，将来可能就不需要 Node.js 了
+
+[官方文档](https://deno.land/) <br/>
+[中文文档](https://docs.denohub.com/deno/)
+
+## Deno 是什么？
+
+Deno (/ˈdiːnoʊ/,  `dee-no`)
+
+Deno 是一个 `TypeScript` 的运行时环境，它提供了一些新的特性，如模块加载、异步 `IO`、`WebAssembly` 等。
+它的语法和 `Node.js` 类似，但是它有更多的特性，如模块加载、异步 `IO`、`WebAssembly` 等。
+
+## 如何安装 Deno？
+
+<Tabs>
+  <Tab label="Windows"><Typography.Title style={{padding: "5px 10px"}} level={5} copyable>irm https://deno.land/install.ps1 |
+    iex</Typography.Title></Tab>
+  <Tab label="macOS"><Typography.Title style={{padding: "5px 10px"}} level={5} copyable>curl -fsSL https://deno.land/install.sh |
+    sh</Typography.Title></Tab>
+  <Tab label="Linux"><Typography.Title style={{padding: "5px 10px"}} level={5} copyable>curl -fsSL https://deno.land/install.sh |
+    sh</Typography.Title></Tab>
+</Tabs>
+
+安装后，您的系统路径上应该有可用的deno可执行文件。您可以通过运行以下命令来验证安装：
+
+```bash
+deno --version
+```
+
+## 如何运行 Deno 程序？
+
+以下是一个简单的 Deno 程序，它打印出 "Hello World"：
+
+```typescript
+console.log("Hello World");
+```
+在运行这个程序之前，你需要先安装 Deno。你可以从 [deno.land](https://deno.land/#installation) 下载安装包。
+
+一旦安装好 Deno，你可以在终端中运行这个程序：
+
+```bash
+> $ deno run hello.ts
+> Hello World
+```
+
+这个命令会编译并运行 hello.ts 文件中的代码。
+
+Deno 的语法和 Node.js 类似，但是它有更多的特性，如模块加载、异步 IO、WebAssembly 等。

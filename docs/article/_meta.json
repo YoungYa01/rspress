@@ -3,6 +3,35 @@
     "type": "dir",
     "name": "tec-doc",
     "label": "技术文档",
+    "collapsed": true,
+    "collapsible": true
+  },
+  {
+    "type": "dir",
+    "name": "css",
+    "label": "CSS",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "react",
+    "label": "React",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "deno",
+    "label": "Deno",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "rust",
+    "label": "Rust",
+    "collapsible": true,
     "collapsed": true
   },
   {

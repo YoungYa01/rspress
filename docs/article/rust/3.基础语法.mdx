@@ -1,0 +1,194 @@
+# Rust基础语法
+
+## 定义变量
+
+```rust title="main.rs"
+fn main() {
+    let x = 5;
+    println!("The value of x is: {}", x);
+}
+```
+
+`let`关键字定义变量，变量名后面跟一个等号，然后跟变量的值。变量名是`x`，变量的值是`5`。
+`println!`宏用于打印输出。`{}`是占位符，`x`的值将被替换。
+在Rust中，变量是 immutable（不可变的）的，除非你使用`mut`关键字来声明一个可变的变量。
+
+```rust title="main.rs"
+fn main() {
+    let mut x = 5;
+    println!("The value of x is: {}", x);
+    x = 6;
+    println!("The value of x is: {}", x);
+}
+```
+
+## 数据类型
+
+- 数值类型：有符号整数 (i8, i16, i32, i64, isize)、 无符号整数 (u8, u16, u32, u64, usize) 、浮点数 (f32, f64)、以及有理数、复数
+- 字符串：字符串字面量和字符串切片 &str
+- 布尔类型：true 和 false
+- 字符类型：表示单个 Unicode 字符，存储为 4 个字节
+- 单元类型：即 () ，其唯一的值也是 ()
+
+### 整数类型
+
+| 长度 | 有符号类型 | 无符号类型 |
+| ---- | ---------- | ---------- |
+| 8 位 | i8 | u8 |
+| 16 位 | i16 | u16 |
+| 32 位 | i32 | u32 |
+| 64 位 | i64 | u64 |
+| 128 位 | i128 | u128 |
+| 视架构而定 | isize | usize |
+
+### 字符类型
+
+```rust title="main.rs"
+fn main() {
+    let x: char = '杨';
+    println!("{}", size_of_val(&x));
+}
+```
+
+### 布尔(bool)
+
+```rust title="main.rs"
+use rand;
+
+fn main() {
+    let mut count = 0; // 统计随机数小于0.5的个数
+    for _ in 1..=100 { // 循环100次
+        count += if rand::random_bool(0.5) { 1 } else { 0 }; // 判断随机数是否小于0.5，如果是则加1，否则不加
+    }
+    println!("{}", count);
+}
+```
+
+### 单元类型
+单元类型就是 ()， 唯一的值也是 ()
+
+fn main() 函数就返回这个单元类型 ()，你不能说 main 函数无返回值，因为没有返回值的函数在 Rust 中是有单独的定义的：发散函数( diverge function )，顾名思义，无法收敛的函数。
+
+例如常见的 println!() 的返回值也是单元类型 ()。
+
+再比如，你可以用 () 作为 map 的值，表示我们不关注具体的值，只关注 key。 这种用法和 Go 语言的 struct{} 类似，可以作为一个值用来占位，但是完全不占用任何内存。
+
+## 位运算
+
+| 运算符 |  说明 |
+|----|-----------|
+|& 位与 |  相同位置均为1时则为1，否则为0 |
+|\| 位或 |  相同位置只要有1时则为1，否则为0 |
+|^ 异或 |  相同位置不相同则为1，相同则为0 |
+|! 位非 |  把位中的0和1相互取反，即0置为1，1置为0 |
+| \<\< 左移 |  所有位向左移动指定位数，右位补0 |
+| \>\> 右移 |  所有位向右移动指定位数，带符号移动（正数补0，负数补1） |
+
+## 序列(Range)
+
+Rust 提供了一个非常简洁的方式，用来生成连续的数值，例如 1..5，生成从 1 到 4 的连续数字，不包含 5 ；1..=5，生成从 1 到 5 的连续数字，包含 5，它的用途很简单，常常用于循环中：
+
+```rust title="main.rs"
+for i in 1..=5 {
+    println!("{}", i);
+}
+
+for i in 'a'..='z' {
+    println!("{}",i);
+}
+```
+
+## 函数
+
+
+```rust title="main.rs"
+fn main() {
+    println!("Hello, world!");
+}
+```
+
+`fn`关键字定义一个函数，函数名是`main`，函数体是`println!`宏。`println!`宏用于打印输出。
+
+<img src="https://pic2.zhimg.com/80/v2-54b3a6d435d2482243edc4be9ab98153_1440w.png" alt="fn"/>
+
+```rust title="main.rs"
+fn add(i: i32, j: i32) -> i32 {
+   i + j
+}
+```
+
+声明函数的关键字 `fn`，函数名 `add()`，参数 `i` 和 `j`，参数类型和返回值类型都是 `i32`
+
+### 函数要点
+
+- 函数名和变量名使用蛇形命名法(`snake case`)，例如 `fn add_two() -> { }`
+- 函数的位置可以随便放，`Rust` 不关心我们在哪里定义了函数，只要有定义即可
+- 每个函数参数都需要标注类型
+
+### 函数参数
+
+Rust 是静态类型语言，因此需要你为每一个函数参数都标识出它的具体类型
+
+```rust title="main.rs"
+fn add(i: i32, j: i32) -> i32 {
+   println!("The value of i is: {}", i);
+   println!("The value of j is: {}", j);
+   i + j
+}
+```
+
+### 函数返回
+
+函数的返回值就是函数体最后一条表达式的返回值，当然我们也可以使用 return 提前返回
+
+```rust title="main.rs"
+// 函数体最后一条表达式的返回值
+fn add(i: i32, j: i32) -> i32 {
+   i + j
+}
+// 使用`return`提前返回
+fn add(i: i32, j: i32) -> i32 {
+   if i == 0 {
+      return j;
+   }
+   if j == 0 {
+      return i;
+   }
+   i + j
+}
+fn main() {
+   let result = add(5, 6);
+   println!("The result is: {}", result);
+}
+```
+
+### 永不返回的发散函数 !
+
+当用 ! 作函数返回类型的时候，表示该函数永不返回( diverge function )，特别的，这种语法往往用做会导致程序崩溃的函数：
+
+```rust title="main.rs"
+fn dead_end() -> ! {
+   panic!("This function never returns!");
+}
+```
+``` rust title="main.rs"
+fn forever() -> ! {
+  loop {
+    //...
+  };
+}
+```
+
+## 数据类型
+在Rust中，数据类型是静态的，这意味着在编译时，编译器会检查变量的类型，并确保它们在使用之前已经声明。
+在Rust中，数据类型分为两种：
+
+1. 静态类型：编译器在编译时检查变量的类型，并确保它们在使用之前已经声明。
+2. 动态类型：编译器在运行时检查变量的类型，并确保它们在使用之前已经声明。
+
+```rust
+fn main() {
+    let x = 5;
+    println!("The value of x is: {}", x);
+}
+```

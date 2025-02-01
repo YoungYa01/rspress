@@ -1,17 +1,13 @@
 [
   {
     "text": "文章",
-    "link": "/article/tec-doc/CSS相关/Tailwind_CSS.html",
+    "link": "/article/css/Tailwind_CSS.html",
     "activeMatch": "/article/"
   },
   {
-    "text": "白板",
-    "link": "/WhiteBoard/",
-    "activeMatch": "/WhiteBoard/"
-  },
-  {
-    "text": "XMind在线",
-    "link": "/XMind/"
+    "text": "关于我",
+    "link": "/about",
+    "activeMatch": "/about/"
   },
   {
     "text": "旧版",
