@@ -2,10 +2,6 @@
 
 ## react+ts必备：react中常用的ts类型
 
-[![SUC-wxp](https://picx.zhimg.com/v2-57146cfa51ae286962962524677dbfa3_l.jpg?source=172ae18b)](https://www.zhihu.com/people/wang-xue-peng-40)
-
-[SUC-wxp](https://www.zhihu.com/people/wang-xue-peng-40)
-
 ## React.FC
 
 React.FC的注解是有些问题的，在是否优先使用这个类型作为注解上存在一部分争议，因为这个类型破坏了JSX.LibraryManagedAttributes， 导致其忽略了函数和类组件的defaultsProps，displayName这样的参数 (详见：[https://github.com/typescript-cheatsheets/react/issues/87](https://link.zhihu.com/?target=https%3A//github.com/typescript-cheatsheets/react/issues/87))。另外，其不能像class组件一样返回props的children (详见：[https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33006](https://link.zhihu.com/?target=https%3A//github.com/DefinitelyTyped/DefinitelyTyped/issues/33006)) ,显式的定义children属性，或更改源码可解决这个问题。
