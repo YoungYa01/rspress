@@ -467,12 +467,9 @@ handlerChange: React.ChangeEventHandler<HTMLInputElement> = e => {
 
 因为InputEvent在各个浏览器支持度不一样，所以可以使用KeyboardEvent代替
 
+## createRef与forwardRef
 
-
-
-​	28.createRef与forwardRef
-
-```text
+```typescript jsx
 class CssThemeProvider extends React.PureComponent<Props> {
   private rootRef = React.createRef<HTMLDivElement>(); // like this
   render() {
@@ -496,9 +493,9 @@ export const FancyButton = React.forwardRef<Ref, Props>((props, ref) => (
 
 
 
-​	29.ReactDOM.createPortal
+## ReactDOM.createPortal
 
-```text
+```typescript jsx
 // Class
 const modalRoot = document.getElementById("modal-root") as HTMLElement;
 // assuming in your html file has a div with id 'modal-root';
@@ -544,9 +541,9 @@ export default Modal;
 
 
 
-30. 错误处理
+## 错误处理
 
-```text
+```typescript jsx
 //option1 ： 使用 react-error-boundary
 //option2 :  自定义boundary component
 import React, { Component, ErrorInfo, ReactNode } from "react";
@@ -587,9 +584,9 @@ export default ErrorBoundary;
 
 
 
-​	31.联合类型的弊端，在对象与对象的联合时无法精准的进行区分
+## 联合类型的弊端，在对象与对象的联合时无法精准的进行区分
 
-```text
+```typescript jsx
 interface Admin {
   role: string;
 }
@@ -617,9 +614,9 @@ function isAdmin(user: Admin | User): user is Admin {
 
 
 
-31. 非空断言用法（最好是实际处理空值，并且尽量少用此法）
+## 非空断言用法（最好是实际处理空值，并且尽量少用此法）
 
-```text
+```typescript jsx
 element.parentNode!.removeChild(element); // ! before the period
 myFunction(document.getElementById(dialog.id!)!); // ! after the property accessing
 let userID!: string; // definite assignment assertion... be careful!
@@ -627,21 +624,25 @@ let userID!: string; // definite assignment assertion... be careful!
 
 
 
-32. 用symbol创建标识性的ID注解
+## 用symbol创建标识性的ID注解
 
-```text
+```typescript jsx
 type OrderID = string & { readonly brand: unique symbol };
 type UserID = string & { readonly brand: unique symbol };
 type ID = OrderID | UserID;
+
 function OrderID(id: string) {
   return id as OrderID;
 }
+
 function UserID(id: string) {
   return id as UserID;
 }
+
 function queryForUser(id: UserID) {
   // ...
 }
+
 queryForUser(OrderID("foobar")); // Error, Argument of type 'OrderID' is not assignable 
 // to parameter of type 'UserID'
 // unique 是一个关键词
@@ -654,28 +655,31 @@ queryForUser(OrderID("foobar")); // Error, Argument of type 'OrderID' is not ass
 // https://github.com/microsoft/TypeScript/pull/33038
 // 实例：
 
-// type NormalizedPath = unique string;
-// type AbsolutePath = unique string;
-// type NormalizedAbsolutePath = NormalizedPath & AbsolutePath;
+type NormalizedPath = unique
+string;
+type AbsolutePath = unique
+string;
+type NormalizedAbsolutePath = NormalizedPath & AbsolutePath;
 
-// declare function isNormalizedPath(x: string): x is NormalizedPath;
-// declare function isAbsolutePath(x: string): x is AbsolutePath;
-// declare function consumeNormalizedAbsolutePath(x: NormalizedAbsolutePath): void;
+declare function isNormalizedPath(x: string); /* x is NormalizedPath */
+declare function isAbsolutePath(x: string); /* x is AbsolutePath */
+
+declare function consumeNormalizedAbsolutePath(x: NormalizedAbsolutePath): void;
 
 
-// const p = "/a/b/c";
-// if (isNormalizedPath(p)) {
-//     if (isAbsolutePath(p)) {
-//         consumeNormalizedAbsolutePath(p);
-//     }
-// }
+const p = "/a/b/c";
+if (isNormalizedPath(p)) {
+  if (isAbsolutePath(p)) {
+    consumeNormalizedAbsolutePath(p);
+  }
+}
 ```
 
 
 
-​	33.Overloading Function
+## Overloading Function
 
-```text
+```typescript jsx
 // 1.
 function pickCard(x: { suit: string; card: number }[]): number;
 function pickCard(x: number): { suit: string; card: number };
@@ -692,36 +696,24 @@ type pickCard = {
 };
 ```
 
+## 获得组件的props类型可以使用React.ComponentProps<typeof Button>
 
+## interface定义的{a:1,b:2}和typeof 获得的{a:1,b:2}类型意义是不一样的，因为前者不但校验了对象里value的类型还约束了值
 
-​	34.获得组件的props类型可以使用React.ComponentProps<typeof Button>
+## js自动转换ts的工具
 
+1. dts-gen
+2. TypeStat
+3. TypeWiz
+4. js-to-ts-converter
+5. TS-migrate used in Airbnb's conversion
 
+## 自定义钩子的全局类型定义案例
 
-​	35.interface定义的{a:1,b:2}和typeof 获得的{a:1,b:2}类型意义是不一样的，因为前者不但校验了对象里value的类型还约束了值
-
-
-
-​	36.js自动转换ts的工具
-
-1.dts-gen
-
-2.TypeStat
-
-3.TypeWiz
-
-4.js-to-ts-converter
-
-5.TS-migrate used in Airbnb's conversion
-
-
-
-​	37.自定义钩子的全局类型定义案例
-
-```text
+```typescript jsx
 declare module 'use-untyped-hook' {
-  export interface InputProps { ... }   // type declaration for prop
-  export interface ReturnProps { ... } // type declaration for return props
+  export interface InputProps { /* ... */ }   // type declaration for prop
+  export interface ReturnProps { /* ... */ } // type declaration for return props
   export default function useUntypedHook(
     prop: InputProps
     // ...
@@ -729,11 +721,9 @@ declare module 'use-untyped-hook' {
 }
 ```
 
+## 为类定义全局类型的案例
 
-
-​	38.为类定义全局类型的案例
-
-```text
+```typescript jsx
 import * as React from "react";
 
 declare class SimpleSelect extends React.Component<SimpleSelectProps, any> {}
@@ -752,31 +742,25 @@ export interface SimpleSelectProps {
 export default SimpleSelect;
 ```
 
+## 内置类型
 
+1. ConstructorParameters: 类构造函数参数类型的元组 
+2. Exclude:将一个类型从另一个类型排除 
+3. Extract:选择可分配给另一类型的子类型 
+4. InstanceType:从一个新类构造函数中获得的实例类型 
+5. NonNullable:从类型中排除空和未定义 
+6. Parameters:函数的形参类型的元组 
+7. Partial:使对象中的所有属性都是可选的 
+8. Readonly:将对象中的所有属性设置为只读 
+9. ReadonlyArray:创建给定类型的不可变数组 
+10. Pick:对象类型的一种子类型,包含其键的子集 
+11. Record:从键类型到值类型的映射 
+12. Required:使对象中的所有属性都是必需的 
+13. ReturnType:函数的返回类型
 
-40. 内置类型
+## 如果你在库的官方类型中遇到bug，你可以将它们复制到本地，并通过“paths”字段告诉TypeScript使用你的本地版本。在你tsconfig.json
 
-```text
-ConstructorParameters ：类构造函数参数类型的元组
-Exclude：将一个类型从另一个类型排除
-Extract：选择可分配给另一类型的子类型
-InstanceType：从一个新类构造函数中获得的实例类型
-NonNullable：从类型中排除空和未定义
-Parameters：函数的形参类型的元组
-Partial：使对象中的所有属性都是可选的
-Readonly：将对象中的所有属性设置为只读
-ReadonlyArray：创建给定类型的不可变数组
-Pick：对象类型的一种子类型，包含其键的子集
-Record：从键类型到值类型的映射
-Required：使对象中的所有属性都是必需的
-ReturnType：函数的返回类型
-```
-
-
-
-​	41.如果你在库的官方类型中遇到bug，你可以将它们复制到本地，并通过“paths”字段告诉TypeScript使用你的本地版本。在你tsconfig.json
-
-```text
+```json title="tsconfig.json"
 {
   "compilerOptions": {
     "paths": {
