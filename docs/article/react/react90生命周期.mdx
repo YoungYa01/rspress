@@ -1,0 +1,107 @@
+import {Typography, Flex} from 'antd';
+
+# 生命周期
+
+## 挂载
+
+当组件第一次被渲染到 DOM
+中的时候，就为其[设置一个计时器](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval)。这在 React
+中被称为“挂载（mount）”
+
+## 卸载
+
+当 DOM 中组件被删除的时候，应该[清除计时器](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/clearInterval)
+。这在 React 中被称为“卸载（unmount）”
+
+## 生命周期
+
+<Flex justify={'center'} align={'center'} vertical>
+  <img src="D:\notebook\React.assets\image-20221023152012370.png" alt="lifecycle-old"/>
+  <Typography.Text type={'secondary'}>旧版的图</Typography.Text>
+  <img src="https://www.runoob.com/wp-content/uploads/2016/02/ogimage.png" alt="lifecycle-new"/>
+  <Typography.Text type={'secondary'}>新版的图</Typography.Text>
+</Flex>
+
+
+## 引出
+
+```javascript title="jsx"
+class Life extends React.Component {
+	state = { opacity: .1 }
+		death = () => {
+		ReactDOM.unmountComponentAtNode(document.getElementsByTagName('div')[0]);
+	}
+	componentDidMount() {
+		setInterval(() => {
+			let { opacity } = this.state;
+			opacity -= 0.1;
+			if (opacity <= 0) {
+				opacity = 1;
+			}
+			this.setState({ opacity: opacity });
+			console.log("指数增长！");
+		}, 200);
+	}
+	render() {
+		return (
+      <div>
+        <h1 style={{ opacity: this.state.opacity }}>Study React</h1>
+			  <button onClick={this.death}>Delete</button>
+		  </div>
+    )
+	}
+}
+ReactDOM.render(<Life />, document.getElementsByTagName('div')[0]);
+```
+
+上面引出里第一个生命周期钩子--`componentDidMount`
+
+## 组件挂载完毕的钩子
+
+```javascript
+class Life extends React.Component{
+  componentDidMount(){
+    //当组件挂载完毕时调用这个
+  }
+}
+```
+
+`componentDidMount()` 会在组件挂载后（插入 `DOM` 树中）立即调用。依赖于 `DOM` 节点的初始化应该放在这里。如需通过网络请求获取数据，此处是实例化请求的好地方。
+
+这个方法是比较适合添加订阅的地方。如果添加了订阅，请不要忘记在 `componentWillUnmount()` 里取消订阅
+
+你可以在 `componentDidMount()` 里**直接调用 `setState()`**
+。它将触发额外渲染，但此渲染会发生在浏览器更新屏幕之前。如此保证了即使在 `render()`
+两次调用的情况下，用户也不会看到中间状态。请谨慎使用该模式，因为它会导致性能问题。通常，你应该在 `constructor()` 中初始化
+`state`。如果你的渲染依赖于 `DOM` 节点的大小或位置，比如实现 `modals` 和 `tooltips` 等情况下，你可以使用此方式处理
+
+## 组件将要挂载的钩子
+
+```javascript
+class Life extends React.Component{
+  componentWillMount(){
+    //当组件挂载前的时候调用
+  }
+}
+```
+
+## 组件将要卸载的钩子
+
+```javascript
+class Life extends React.Component{
+  componentWillUnmount(){
+    //当组件将要被卸载的时候调用
+  }
+}
+```
+
+`componentWillUnmount()` 会在组件卸载及销毁之前直接调用。在此方法中执行必要的清理操作，例如，清除
+`timer`，取消网络请求或清除在 `componentDidMount()` 中创建的订阅等。
+
+`componentWillUnmount()` 中**不应调用 `setState()`**，因为该组件将永远不会重新渲染。组件实例卸载后，将永远不会再挂载它。
+
+## 卸载组件
+
+```javascript
+ReactDOM.unmountComponentAtNode()
+```

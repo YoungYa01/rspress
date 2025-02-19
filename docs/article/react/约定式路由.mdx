@@ -1,0 +1,140 @@
+import pageModuleImage from '/docs/public/react-约定式路由/1.jpg';
+import routesImage from '/docs/public/react-约定式路由/2.jpg';
+import entriesImage from '/docs/public/react-约定式路由/3.jpg';
+import {Flex, Typography} from 'antd';
+
+# 如何基于`Vite`编写一个约定式路由
+
+> [!TIP]
+> 约定式路由是一种路由配置方式，它允许开发者通过约定式规则来配置路由，而无需手动编写路由配置文件。
+
+## 1. 使用 import.meta.glob 获取模块配置信息,
+
+获取page组件以及路径
+以下是一个简单的示例，展示了如何使用 glob 模块来获取模块配置信息：
+
+```typescript jsx
+const pageModule = import.meta.glob('../page/**/*.tsx', { eager: true, import: 'default' });
+```
+
+<Flex justify={'center'} align={'center'} vertical>
+  <img src={pageModuleImage} alt="模块配置信息"/>
+  <Typography.Text type={'secondary'}>模块配置信息结果</Typography.Text>
+</Flex>
+
+## 2. 获取组件引入函数
+
+```typescript jsx
+const comModule = import.meta.glob('../page/**/*.tsx');
+```
+
+## 3. 创建路由
+
+```typescript jsx
+const routes: RouteObject[] = Object.entries(pageModule).map(([pagePath, config]) => {
+  // 返回路由对象
+  return {
+  }
+});
+```
+
+<Flex justify={'center'} align={'center'} vertical>
+  <img src={entriesImage} alt="entries信息"/>
+  <Typography.Text type={'secondary'}>entries信息</Typography.Text>
+</Flex>
+
+## 4. 分隔路由路径、规定格式、获取组件
+
+```typescript jsx
+const routes: RouteObject[] = Object.entries(pageModule).map(([pagePath, config]) => {
+  // 分隔路由路径
+  let path = pagePath.replace('../page', '').replace('/index.tsx', '') || '/';
+  // 此处可自行修改为所需要的格式
+  // 规定格式 例：/HomePage → /home-page
+  path = path.split('').map((s, index) =>
+  /* 分隔处理 */
+  s >= 'A' && s <= 'Z' ? index !== 1 ? `-${s.toLowerCase()}` : s.toLowerCase() : s).join('');
+  // 组件名字获取
+  const name = path.split('/').filter(Boolean).join('-') || 'index';
+  // 返回路由对象
+  return {
+    path: path,
+    name: name,
+    element: comModule[pagePath],
+    // element: lazyLoad(comModule[pagePath]),
+    ...config
+  }
+})
+```
+
+<Flex justify={'center'} align={'center'} vertical>
+  <img src={routesImage} alt="模块配置信息"/>
+  <Typography.Text type={'secondary'}>路由对象数组结果</Typography.Text>
+</Flex>
+
+## 5. 导出路由
+
+```typescript jsx
+// 增加默认路由：/ 对应的 <Home/> 组件
+export default (): React.ReactElement | null => useRoutes([
+  ...routes,
+  {
+    path: '/',
+    element: <Home/>,
+  }
+]);
+```
+
+## 完整代码
+
+```typescript jsx
+import React, {lazy} from 'react';
+import {RouteObject, useRoutes} from "react-router-dom";
+
+// 自定义懒加载函数
+const lazyLoad = (factory: () => Promise<unknown>) => {
+  const Module = lazy(factory);
+  return (
+    <Module/>
+  )
+}
+// 引入必有的Home组件
+const Home = lazy(() => import("../page/Home"));
+// 获取page组件以及路径
+const pageModule = import.meta.glob('../page/**/*.tsx', {eager: true, import: 'default'});
+// 获取组件引入函数
+const comModule = import.meta.glob('../page/**/*.tsx');
+// 创建路由
+const routes: RouteObject[] = Object.entries(pageModule).map(([pagePath]) => {
+  // 分隔路由路径
+  let path = pagePath.replace('../page', '').replace('/index.tsx', '') || '/';
+  // 规定格式 例：/HomePage → /home-page
+  path = path.split('').map((s, index) => {
+    // 分隔处理
+    if (s >= 'A' && s <= 'Z') {
+      if (index !== 1) {
+        return `-${s.toLowerCase()}`;
+      }
+      return s.toLowerCase();
+    } else {
+      return s;
+    }
+  }).join('');
+  // 组件名字获取
+  const name = path.split('/').filter(Boolean).join('-') || 'index';
+  // 返回路由对象
+  return {
+    path: path,
+    name: name,
+    element: lazyLoad(comModule[pagePath]),
+  }
+})
+// 增加默认路由：/ 对应的 <Home/> 组件
+export default (): React.ReactElement | null => useRoutes([
+  ...routes,
+  {
+    path: '/',
+    element: <Home/>,
+  }
+]);
+```

@@ -1,0 +1,89 @@
+# JSX的使用及相关语法
+
+## 变量的使用
+
+在`jsx`中可以定义一个变量,然后赋值,然后交给虚拟`ＤＯＭ`,用 `{`变量`}` 将变量包起来
+
+```typescript jsx
+const myId = 'YYY';
+const VDOM = (
+  <h1 id={myId}>
+    <p>
+      这是一个层层title
+    </p>
+  </h1>
+);
+```
+
+但是`class`标签类名就有点问题了
+
+```javascript title="class标签类名"
+const myId = 'YYY';
+const VDOM = (
+    <h1>
+        <p class="title">
+            这是一个层层title
+        </p>
+    </h1>
+);
+```
+
+上述代码中的`class`会产生`warning`
+
+![image-20221007230948128](D:\notebook\React.assets\image-20221007230948128.png)
+
+**处理方法就是将`class`改成`className`**
+
+```typescript jsx
+const myId = 'YYY';
+const VDOM = (
+    <h1 id={myId}>
+        <p className="title">
+            这是一个层层title
+        </p>
+    </h1>
+);
+```
+
+搞定,目的就是为了**避免`ES6`的`class`**声明类的用法
+
+## JSX中的内联样式表使用
+
+```typescript jsx
+<div style={{backgroundColor:'black'}}></div>
+```
+
+注意点
+
+1. 样式内容要写成对象的形式
+2. 组合词的属性要用小驼峰来写
+3. 属性的内容要用用引号引起来,否则就是使用变量
+4. `class`要写成`className`，为了区分`class`类
+
+> 标签必须闭合
+
+```typescript jsx
+<input type="text" />		//结尾加一个反斜杠将其闭合
+```
+
+## React中标签的使用
+
+1. 若是小写字母开头，则会判定去找`html`中对应的标签，若无则报错
+2. 若是大写字母开头，则会去渲染对应的组件，若没有定义则报错
+
+> 使用`js`语法遍历数组，在`jsx`中的使用
+
+```typescript jsx
+const arr = ['JavaScript', 'CSS', 'HTML', 'React', 'Regular', 'Vue'];
+const VDOM = (
+  <div>
+    <h1>前端学习</h1>
+    <ul>
+      {
+        arr.map((item, index) => <li key={index}>{item}</li>)
+      }
+    </ul>
+  </div>
+)
+ReactDOM.render(VDOM, document.getElementById("#root"));
+```

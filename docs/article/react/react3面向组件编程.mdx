@@ -1,0 +1,116 @@
+# React面向组件编程
+
+## 函数式组件
+
+```html title="创建函数式组件"
+<script type="text/babel">
+  //创建函数式组件
+  function Demo() {
+    return <h2>我使用函数定义的组件(适合用于【简单组件】的定义)</h2>
+  }
+  ReactDOM.render(<Demo/>,document.querySelector(".test"));
+</script>
+```
+
+`ReactDOM.render()`之后执行了解析组件标签，然后找到`Demo`组件，发现是函数式组件，随后调用该函数，将返回的虚拟DOM转为真实DOM并且呈现出来
+
+函数式组件创建注意**函数名要首字母大写**，否则会被识别成`html`，浏览器报错
+
+在`react`中无法打印`this`，因为`babel`编译后，开启了严格模式，打出来的`this`为`undefined`
+
+## 类式组件
+
+先回忆一下**类**是什么
+
+```jsx title="ES6类"
+// 创建一个person类
+class Person {
+// 构造器方法
+  constructor(name, age, ...c) {
+    this.name = name;
+    this.age = age;
+    this.rest = c;
+  }
+
+  //一般方法
+  speak() {
+    console.log(`我叫${this.name},我的年龄是${this.age}。`)
+  }
+}
+
+const p2 = new Person('Jerry', 22);
+const p3 = new Person('Jerry', 22, "asds", 123);
+p2.speak();
+console.log(p3);
+```
+
+**再想想继承、原型、原型链**
+
+```jsx title="ES6类的继承"
+// 创建一个person类
+class Person {
+// 构造器方法
+  constructor(name, age, ...c) {
+    this.name = name;
+    this.age = age;
+    this.rest = c;
+  }
+
+  //一般方法
+  speak() {
+    console.log(`我叫${this.name},我的年龄是${this.age}。`)
+  }
+}
+
+// class Student extends Person{
+// 可以什么都不写，调用父类的构造器
+// }
+class Student extends Person {
+//再添加自己独有的构造
+  constructor(name, age, grade) {
+    super(name, age);
+    // 调用super方法，接受父类已有的构造器
+    //super必须在最前面
+    this.grade = grade;
+  }
+}
+
+const S1 = new Student('xiaoMing', '20', '高三');
+console.log(S1);
+```
+
+重写从父类继承来的方法
+
+```jsx title="重写方法"
+class Student extends Person {
+  //再添加自己独有的构造
+  constructor(name, age, grade) {
+    super(name, age);
+    // 调用super方法，接受父类已有的构造器
+    //super必须在最前面
+    this.grade = grade;
+  }
+
+  speak() {
+    //重写从父类继承来的方法
+    console.log(`我叫${this.name},我的年龄是${this.age}，我正在读${this.grade}`)
+  }
+}
+```
+
+> 现在开始写类式组件
+
+```jsx title="React类式组件"
+class MyComponent extends React.Component {
+  render(){
+	// render 放在类的原型对象上，供实例使用。
+	return <h2>我是用类定义的组件（适用于【复杂组件】的定义）</h2>
+  }
+}
+ReactDOM.render(<MyComponent/>,document.querySelector("div"));
+```
+
+`ReactDOM.render()`的执行过程
+
+`ReactDOM.render()`之后执行了解析组件标签，然后找到`<MyComponent/>`组件，发现是类式组件，随后new出来该类的实例，并通过实例调用到原型上的render方法，将render返回的虚拟DOM转为真实DOM并且呈现出来
+

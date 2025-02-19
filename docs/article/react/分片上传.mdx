@@ -1,0 +1,448 @@
+# 分片上传
+
+> 分片上传，就是前端将文件分成多个片段，然后分片上传，再由后端合并成一个文件。
+
+:::details{title=为什么要分片}
+> 文件上传在项目开发中再常见不过了
+> 大多项目都会涉及到图片、音频、视频、文件的上传
+> 通常简单的一个Form表单就可以上传小文件了，但是遇到大文件时比如1GB以上，或者用户网络比较慢时，简单的文件上传就不能适用了
+> 用户辛苦传了好几十分钟，到最后发现上传失败，这样的系统用户体验是非常差的。
+> 或者用户上传到一半时，把应用退出了，下次进来再次上传，如果让他从头开始传也是不合理的。
+
+:::
+
+## 步骤
+1. 检查文件的md5
+2. 分片上传
+3. 合并分片
+4. 获取上传结果
+
+## 1. 检查文件的md5判断文件是否已经上传
+
+在通过上传组件获取文件之后，可以使用`md5`来检查文件的md5，如果md5相同，则说明文件已经上传过，直接返回文件信息，不再上传。
+
+```typescript jsx title="检查文件md5"
+const uploadFile = async (fileMd5) => {
+  // 检查文件是否已上传
+  const res = await request(`your-check-exits-URL?md5=${fileMd5}&fileSuffix=`, {
+    method: 'GET',
+    headers: {token:'your-token'}
+  })
+  /* 此处判断该文件是否存在 */
+  if (res.data.isExit) {
+    // 如果存在则返回文件信息（调用onChange方法），并设置组件的上传进度为100%
+    onChange?.({
+      fileName: res.data.fileName,
+      filePath: res.data.filePath,
+    });
+    setPercent(100);
+    // 设置组件的文件列表
+    setFilesList([{
+      name: res.data.fileName,
+      url: res.data.filePath,
+      status: 'done',
+    }] as UploadFile[]);
+    message.success('文件上传成功')
+    setLoading(false)
+    return;
+  }
+}
+```
+
+## 2. 分片上传
+
+```typescript jsx title="分片上传"
+// 上传分片
+const uploadChunk = (chunk, chunkIndex, onSuccess) => {
+  // 重试次数
+  let retryTime = 5;
+  // 创建FormData对象
+  const formData = new FormData();
+  formData.append('md5', fileMd5);
+  formData.append('chunkIndex', chunkIndex);
+  formData.append('chunk', chunk);
+  // 上传FormData对象
+  return request('your-file-upload-URL', {
+    method: 'POST',
+    data: formData,
+    headers: {token:'your-token'}
+  })
+  .then(() => onSuccess())
+  .catch(() => {
+    if (retryTime > 0) {
+      retryTime--;
+      return uploadChunk(chunk, chunkIndex, onSuccess);
+    }
+  });
+}
+// 分片数组
+const chunkPromises = [];
+// 遍历分片列表
+for (let i = 0; i < chunkList.length; i++) {
+  chunkPromises.push(uploadChunk(
+    chunkList[i],
+    i + 1,
+    // eslint-disable-next-line @typescript-eslint/no-loop-func
+    () => {
+      setPercent(p => p + 99 / chunkCount)
+      chunksUploaded++;
+    }))
+}
+// 等待所有分片上传完成
+await Promise.all(chunkPromises);
+```
+
+## 3. 合并分片
+
+```typescript jsx title="合并分片"
+request(`your-file-merge-url?md5=${fileMd5}&fileSuffix=${fileSuffix}&chunkTotal=${chunkCount}`, {
+    method: 'POST',
+    headers: {token:'your-token'}
+  })
+  .then((mergeResult) => {
+    if (mergeResult?.data?.startsWith("[miss_chunk]")) {
+      message.error('文件缺失，请重新上传')
+      return
+    }
+    setPercent(100)
+    message.success('文件上传成功')
+    // 上传成功后处理结果
+    onChange?.({
+      fileName: mergeResult.fileName,
+      response: mergeResult
+    });
+  })
+  .finally(() => {
+    setLoading(false);
+  })
+```
+
+## 全部代码
+
+```typescript jsx title="全部代码"
+import {Upload, message, Spin, Progress, Button} from "antd";
+import type {UploadProps} from "antd";
+import {InboxOutlined} from "@ant-design/icons";
+import {request} from '@umijs/max';
+import {md5} from 'js-md5'
+import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
+import {UploadFile} from "antd/es/upload/interface";
+
+type Props<T = any> = {
+  // 检查文件是否已上传URL
+  readonly checkExitsURL: string;
+  // 上传文件URL
+  readonly uploadFileURL: string;
+  // 合并文件URL
+  readonly mergeFileURL: string;
+} & Pick<UploadProps, 'action' | 'headers' | 'value' | 'method' | 'onChange' |
+'accept' | 'disabled' | 'fileList' | 'defaultFileList' | 'style' | 'children' |
+'className' | 'maxFileSize' | 'draggable' | 'progress' | 'multiple' | 'maxCount' | 'onRemove'>
+
+const PiecewiseUpload: React.ForwardRefExoticComponent<React.PropsWithoutRef<Props> & React.RefAttributes<unknown>> =
+  /**
+   * @description 分片上传组件
+   * @param props {Props}
+   * @param ref
+   * @useage 在使用此分片上传组件的时候必须传递三个URL参数，checkExitsURL，uploadFileURL，mergeFileURL
+   *         若想获取上传之后的结果，请使用onChange属性进行监听
+   *         onChange={(info) => {
+   *           console.log(info)
+   *         }}
+   *         注意：目前存在一个问题，在销毁该组件的时候，不会触发onChange事件
+   *         比如：如果你在Drawer中使用的时候，要使用destroyOnClose设置为true
+   *         或者一个冗余的方法，通过ref 获取组件实例，在组件销毁的时候调用reset方法
+   *         示例：
+   *         const ref = useRef<any>(null);
+   *         useEffect(() => {
+   *           return () => {
+   *             ref.current?.reset();
+   *           }
+   *         }, [])
+   *         支持Upload        组件的大部分属性：
+   *         ————————————————————————————————————
+   *         |accept           |接收的文件类型     |
+   *         |disabled         |是否禁用          |
+   *         |maxCount         |最大上传数量       |
+   *         |progress         |进度条样式        |
+   *         |draggable        |是否拖拽上传      |
+   *         |className        |类名             |
+   *         |style            |样式             |
+   *         |defaultFileList  |默认文件列表      |
+   *         |fileList         |文件列表          |
+   *         |onChange         |上传文件后返回数据  |
+   *         ————————————————————————————————————
+   * @constructor
+   */
+  forwardRef((props, ref) => {
+    const {
+      checkExitsURL,
+      uploadFileURL,
+      mergeFileURL,
+      accept,
+      disabled,
+      maxCount,
+      draggable,
+      children,
+      style,
+      className,
+      maxFileSize,
+      defaultFileList,
+      fileList,
+      onChange
+    } = props;
+    // loading
+    const [loading, setLoading] = useState<boolean>(false);
+    // 上传成功的分片百分比
+    const [percent, setPercent] = useState<number>(0);
+    // 文件列表
+    const [filesList, setFilesList] = useState<Array<UploadFile<any>>>(fileList!);
+    // 使用beforeUpload上传前截断并进行处理
+    const beforeUpload = (file) => {
+      if (maxFileSize && file.size > maxFileSize) {
+        message.error(`文件过大，请上传小于${maxFileSize / 1024 / 1024} M的文件`)
+        return false;
+      }
+      // 检验文件后缀是否在accept中
+      const fileName = file.name;
+      const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase(); // 获取文件扩展名并转换成小写
+      if (!accept?.includes(`.${fileExtension}`)) {
+        message.error('文件类型错误，请上传' + accept + '类型文件');
+        return false;
+      }
+      // 当前选中的文件
+      let currentFile = null;
+      // 分片大小
+      const chunkSize = 6 * 1024 * 1024;
+      // 分片数量
+      let chunkCount = 0;
+      // 已上传的分片数量
+      let chunksUploaded = 0;
+      // 文件的md5值
+      let fileMd5 = '';
+      // 文件后缀
+      let fileSuffix = '';
+      // 分片列表
+      const chunkList = [];
+      // token 获取token
+      const token = sessionStorage.getItem('token');
+      // 设置loading状态
+      setLoading(true);
+
+      // 上传分片
+      const uploadChunk = (chunk, chunkIndex, onSuccess) => {
+        // 重试次数
+        let retryTime = 5;
+        // 创建FormData对象
+        const formData = new FormData();
+        formData.append('md5', fileMd5);
+        formData.append('chunkIndex', chunkIndex);
+        formData.append('chunk', chunk);
+        // 上传FormData对象
+        return request(uploadFileURL, {
+          method: 'POST',
+          data: formData,
+          headers: {token}
+        })
+          .then(() => onSuccess())
+          .catch(() => {
+            if (retryTime > 0) {
+              retryTime--;
+              return uploadChunk(chunk, chunkIndex, onSuccess);
+            }
+          });
+      }
+
+      // 点击上传按钮时触发
+      const uploadFile = async (fileMd5) => {
+        // 检查文件是否已上传
+        const res = await request(`${checkExitsURL}?md5=${fileMd5}&fileSuffix=${fileSuffix}`, {
+          method: 'GET',
+          headers: {token}
+        })
+        if (res.data !== 'false') {
+          setPercent(100);
+          onChange?.({
+            fileName: file.name,
+            response: res
+          });
+          setFilesList([{
+            name: file.name,
+            url: res.data,
+            status: 'done',
+          }] as UploadFile[]);
+          message.success('文件上传成功')
+          setLoading(false)
+          return
+        }
+        // 上传分片
+        const chunkPromises = [];
+        // 遍历分片列表
+        for (let i = 0; i < chunkList.length; i++) {
+          chunkPromises.push(uploadChunk(
+            chunkList[i],
+            i + 1,
+            // eslint-disable-next-line @typescript-eslint/no-loop-func
+            () => {
+              setPercent(p => p + 99 / chunkCount)
+              chunksUploaded++;
+            }))
+        }
+        // 等待所有分片上传完成
+        await Promise.all(chunkPromises);
+        // 合并分片
+        if (chunksUploaded === chunkCount) {
+          request(`${mergeFileURL}?md5=${fileMd5}&fileSuffix=${fileSuffix}&chunkTotal=${chunkCount}`, {
+            method: 'POST',
+            headers: {token}
+          })
+            .then((mergeResult) => {
+              if (mergeResult?.data?.startsWith("[miss_chunk]")) {
+                message.error('文件缺失，请重新上传')
+                return
+              }
+              setPercent(100)
+              message.success('文件上传成功')
+              // 上传成功后处理结果
+              onChange?.({
+                fileName: file.name,
+                response: mergeResult
+              });
+            })
+            .finally(() => {
+              setLoading(false);
+            })
+        }
+      }
+      // 读取文件
+      const reader = new FileReader()
+      reader.readAsArrayBuffer(file);
+      // 读取文件成功后计算md5
+      reader.onload = (event) => {
+        const fileContent = event.target.result
+        fileMd5 = md5(fileContent).toString()
+        // 上传文件
+        uploadFile(fileMd5);
+      };
+      // 读取文件失败
+      reader.onerror = (error) => {
+        console.error('读取文件时发生错误:', error);
+      };
+      // 初始化分片列表
+      currentFile = file;
+      // 计算分片数量
+      chunkCount = Math.ceil(file.size / chunkSize);
+      // 已上传的分片数量
+      chunksUploaded = 0;
+      // 获取文件后缀
+      fileSuffix = "." + file.name.split('.').pop();
+      // 重置进度
+      setPercent(0);
+      // 创建分片
+      for (let i = 0; i < chunkCount; i++) {
+        const start = i * chunkSize;
+        const end = Math.min(start + chunkSize - 1, currentFile.size - 1);
+        // 进行分片
+        chunkList[i] = currentFile.slice(start, end)
+      }
+      return false;
+    }
+
+    // 重置上传状态，进度
+    const handleReset = () => {
+      setPercent(0);
+      setLoading(false);
+      setFilesList([]);
+    }
+
+
+    // 点击删除按钮时触发，清除上传状态，重置进度
+    const handleRemove = () => {
+      handleReset();
+      onChange?.({});
+    }
+
+    useEffect(() => {
+      handleReset();
+      setFilesList(fileList!);
+      return () => {
+        handleReset();
+      }
+    }, []);
+
+    useImperativeHandle(ref, () => ({
+        reset: handleReset
+      })
+    )
+
+    if (!draggable) {
+      return (
+        <Spin spinning={loading} style={style} className={className}>
+          <Upload
+            beforeUpload={beforeUpload}
+            maxCount={maxCount ? maxCount : 1}
+            onRemove={handleRemove}
+            defaultFileList={defaultFileList}
+            fileList={filesList}
+            accept={accept}
+            disabled={disabled}
+            onPreview={() => {
+              return;
+            }}
+          >
+            {children ? children : <Button type="primary">上传文件</Button>}
+          </Upload>
+          {
+            percent !== 0 && (
+              <Progress
+                percent={percent}
+                percentPosition={{align: 'center', type: 'outer'}}
+                format={
+                  (percent) => percent && `${parseFloat(percent.toFixed(2))}%`
+                }/>
+            )
+          }
+        </Spin>
+      )
+    }
+
+
+    return (
+      <Spin spinning={loading} style={style} className={className}>
+        <Upload.Dragger
+          beforeUpload={beforeUpload}
+          maxCount={maxCount ? maxCount : 1}
+          onRemove={handleRemove}
+          defaultFileList={defaultFileList}
+          accept={accept}
+          disabled={disabled}
+          fileList={filesList}
+          onPreview={() => {
+            return;
+          }}
+        >
+          {children ? children : <>
+            <p className="ant-upload-drag-icon">
+              {
+                percent === 100 ? <Progress type="circle" percent={percent}/>
+                  : <InboxOutlined/>
+              }
+            </p>
+            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            <p className="ant-upload-hint">
+              Support for a single or bulk upload. Strictly prohibited from uploading company data or other
+              banned files.
+            </p>
+          </>}
+        </Upload.Dragger>
+        {
+          percent !== 0 &&
+          <Progress percent={percent} percentPosition={{align: 'center', type: 'outer'}} format={
+            (percent) => percent && `${parseFloat(percent.toFixed(2))}%`
+          }/>
+        }
+      </Spin>
+    )
+  })
+export default PiecewiseUpload
+```

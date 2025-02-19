@@ -10,8 +10,7 @@ import {
 } from '@rspress/plugin-shiki';
 import {pluginLastUpdated} from "@rspress/plugin-last-updated";
 import alignImage from 'rspress-plugin-align-image';
-import readingTime from 'rspress-plugin-reading-time';
-import toc from 'rspress-plugin-toc';
+// import readingTime from 'rspress-plugin-reading-time';
 
 export default defineConfig({
   root: path.join(__dirname, 'docs'),
@@ -38,7 +37,10 @@ export default defineConfig({
     outlineTitle:'目录 | Outline',
     lastUpdated: true,
     footer: {
-      message: 'Copyright © 2023-present YoungYa',
+      message: `
+      <span>Copyright © 2023-${new Date().getFullYear()} YoungYa</span><br>
+      <span><a href="https://beian.miit.gov.cn/">蜀ICP备2023021028号-1</a></span>
+      `,
     }
   },
   mediumZoom: {
@@ -48,9 +50,9 @@ export default defineConfig({
     alignImage({
       justify: 'left'
     }),
-    readingTime({
-      defaultLocale: 'zh-CN',
-    }),
+    // readingTime({
+    //   defaultLocale: 'zh-CN',
+    // }),
     pluginShiki({
       transformers: [
         pluginLastUpdated(),

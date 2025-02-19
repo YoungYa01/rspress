@@ -1,0 +1,78 @@
+# 受控式组件与非受控式组件
+
+## 非受控式组件
+
+非受控组件将数据存储在`DOM`中，而不是组件内，这比较类似于传统的`HTML`表单元素。
+
+1. 非受控组件的值不受组件自身的`state`和`props`控制
+2. 非受控组件使用`ref`从`DOM`中获取元素数据
+
+```jsx
+class Login extends React.Component {
+  handleSubmit = (e) => {
+    e.preventDefault();//阻止提交
+	const {username,password} = this
+	console.log(`用户名是：${username.value}，密码是${password.value    }`);
+  }
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label htmlFor="username">
+          用户名：<input ref={c => this.username = c} type="text" name="username" id="username" />
+        </label>
+        <label htmlFor="password">
+          密码：<input ref={c => this.password = c} type="password" name="password" id="password" /><br />
+        </label>
+        <button style={{ width: "470px", height: "36px" }}>Login</button>
+      </form>
+    )
+  }
+}
+ReactDOM.render(<Login />, document.querySelector('div'));
+```
+
+## 受控式组件
+
+1. 受控组件通过`props`获取其当前值，并通过回调函数(比如`onChange`)通知变化
+2. 表单状态发生变化时，都会通知`React`，将状态交给`React`进行处理，比如可以使用`useState`存储
+3. 受控组件中，组件渲染出的状态与它的`value`或`checked`属性相对应
+4. 受控组件会更新`state`的流程
+
+```jsx
+class Login extends React.Component {
+  // 初始化状态
+  state = {
+    username: "",
+    password: ""
+  }
+  // 表单提交的回调
+  handleSubmit = (e) => {
+    e.preventDefault();//阻止提交
+    const {username,password} = this.state
+    console.log(`username是${username}password是${password}`);
+  }
+  //保存用户名到状态中
+  saveUsername = (event) => {
+    this.setState({ username: event.target.value })
+  }
+  // 保存密码到状态中
+  savePassword = (event) => {
+    this.setState({ password: event.target.value })
+  }
+  render() {
+	return (
+    <form onSubmit={this.handleSubmit}>
+      <label htmlFor="username">
+        用户名：<input onChange={this.saveUsername} type="text" name="username" id="username" />
+      </label>
+      <label htmlFor="password">
+        密码：<input onChange={this.savePassword} type="password" name="password" id="password" />
+      </label><br />
+      <button style={{ width: "470px", height: "36px" }}>Login</button>
+    </form>
+    )
+  }
+}
+// 渲染组件
+ReactDOM.render(<Login />, document.querySelector('div'));
+```

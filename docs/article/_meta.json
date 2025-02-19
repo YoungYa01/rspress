@@ -15,6 +15,20 @@
   },
   {
     "type": "dir",
+    "name": "javascript",
+    "label": "JavaScript",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "typescript",
+    "label": "TypeScript",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
+    "type": "dir",
     "name": "react",
     "label": "React",
     "collapsible": true,

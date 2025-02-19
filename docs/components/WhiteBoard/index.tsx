@@ -8,24 +8,27 @@ type IframeProps = {
   onExitFullWindow?: () => void
 }
 // @ts-ignore
-export const Iframe = forwardRef((props: IframeProps, ref: HTMLIFrameElement | undefined) => {
+export const Iframe = forwardRef((props: IframeProps, ref: LegacyRef<HTMLIFrameElement> | undefined) => {
   const {src, isWindowFull, onExitFullWindow} = props;
   return (
-    <div style={{border: '1px solid #ccc', borderRadius: '150px'}}>
+    <div>
       {
         isWindowFull ?
-          <Modal title={null}
-                 footer={null} width={'100vw'}
-                 onCancel={onExitFullWindow}
-                 closeIcon={<Tooltip title={'退出全屏'}>
-                   <FullscreenExitOutlined/>
-                 </Tooltip>}
-                 open keyboard destroyOnClose centered>
+          <Modal
+            title={null}
+            footer={null} width={'100vw'}
+            onCancel={onExitFullWindow}
+            closeIcon={<Tooltip title={'退出全屏'}>
+              <FullscreenExitOutlined/>
+            </Tooltip>}
+            open keyboard destroyOnClose centered>
             <div style={{width: '100%', height: 'calc(100vh - 60px)'}}>
               <iframe src={src} width="100%" height="100%"/>
             </div>
           </Modal>
-          : <iframe src={src} width="100%" height="600" ref={ref}/>
+          : <div style={{width: '100%', height: 'calc(100vh - 100px)'}}>
+            <iframe src={src} width="100%" height="100%" ref={ref}/>
+          </div>
       }
     </div>
   )

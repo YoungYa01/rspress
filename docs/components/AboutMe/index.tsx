@@ -1,7 +1,6 @@
 import {
   Avatar,
   Button,
-  Carousel,
   Result,
   Watermark,
   Divider,
@@ -10,13 +9,11 @@ import {
 } from "antd";
 import {useState} from "react";
 import {useDark} from 'rspress/runtime';
-import SmileIcon from "../SmileIcon";
-import FlowerIcon from "../FlowerIcon";
 import SunFlowerIcon from "../SunFlowerIcon";
 import SplashCursor from "../SplashCursor";
 import LogoWall from "../LogoWall";
-import SplitText from "../SplitText";
 import MagnetLines from "../MagnetLines";
+import SmallGame from "../Game";
 
 const AboutMe = () => {
   const [avatarSrc, setAvatarSrc] = useState<string>(`/pic${[1, 2, 3, 4].at(parseInt(String(Math.random() * 4)))}.jpg`);
@@ -57,7 +54,8 @@ const AboutMe = () => {
     <Watermark content="YoungYa">
       <div className={'w-full bg-blue-800 flex justify-center items-center'}>
         <div>
-          <Avatar size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}}>
+          <Avatar size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}} onClick={handleClick}
+                  style={{cursor: 'pointer'}}>
             <img
               style={{transform: 'scale(2)'}}
               src={avatarSrc}
@@ -73,7 +71,7 @@ const AboutMe = () => {
         </div>
       </div>
       <Divider variant="dotted" style={{borderColor: '#7cb305'}}>
-        <Button type="default" onClick={handleClick} loading={loading}>Change Avatar</Button>
+        {/*<Button type="default" onClick={} loading={loading}>Change Avatar</Button>*/}
       </Divider>
       <Result
         icon={<IconList/>}
@@ -109,6 +107,8 @@ const AboutMe = () => {
       <Flex justify={'center'} align={'center'}>
         <MagnetLines containerSize={"90vmin"}/>
       </Flex>
+
+      <SmallGame/>
       {/*<Carousel autoplay arrows adaptiveHeight draggable fade infinite>*/}
       {/*  {*/}
       {/*    [1, 2, 3, 4].map((item) => (*/}

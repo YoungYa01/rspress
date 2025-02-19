@@ -1,0 +1,76 @@
+# React使用五部曲
+
+## React使用五部曲
+
+```html
+<!-- 创建一个容器 -->
+<div class="react-continer"></div>
+<!-- 引入react核心库 -->
+<script src="../build/react.js"></script>
+<!-- 引入react-dom  用于支持react操作DOM -->
+<script src="../build/react-dom.js"></script>
+<!-- 引入babel 用于将jsx转为js -->
+<script src="../build/babel.js"></script>
+
+<!-- React代码引入方式一 -->
+
+<!-- jsx文件组件并使用 -->
+<script type="text/babel">
+  // 创建虚拟DOM
+  const VDOM = <h1>Hello React</h1>
+  // ReactDom.render(虚拟DOM，容器)
+  React.render(VDOM, document.querySelector('.react-continer'));
+</script>
+<!-- 引入方式二 -->
+<script src="../js/React01.jsx" type="text/babel"></script>
+```
+
+## 引入React相关文件
+
+```html title="通过CDN引入React相关文件"
+<script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+<script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+<script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+```
+
+## 创建虚拟DOM
+
+```html title="第一种方式"
+<script type="text/babel">
+	// 创建虚拟DOM
+	const VDOM = <h1>Hello React</h1>
+	// ReactDom.render(虚拟DOM，容器)
+	React.render(VDOM,document.querySelector('.react-continer'));
+</script>
+```
+
+```typescript jsx title="第二种方式"
+const VDOM = React.creatElement(标签名,标签属性,标签内容)
+```
+
+```html title="创建虚拟DOM"
+<script type="text/javascript">
+      // 创建虚拟DOM
+      const VDOM = React.creatElement('h1'，{id:'title'});
+      // ReactDom.render(虚拟DOM，容器)
+      ReactDOM.render(VDOM,document.querySelector('.react-continer'));
+</script>
+```
+
+## 多层级DOM创建
+
+```typescript jsx title="第一种方式"
+//创建多层级的虚拟DOM
+const VDOM2 = React.createElement('div', { id: 'ReactDiv1' },
+React.createElement('h1', { id: 'ReactDiv2' }, 'Hello React 嵌套'));
+```
+
+```typescript jsx title="第二种方式"
+const VDOM =(
+	<h1 id="reactId1">
+		<div id="reactId2">Hello React and JSX</div>
+	</h1>
+)
+```
+
+**JSX 其实就是原生JS的语法糖**

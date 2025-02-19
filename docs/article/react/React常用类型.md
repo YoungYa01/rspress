@@ -6,36 +6,32 @@
 
 [SUC-wxp](https://www.zhihu.com/people/wang-xue-peng-40)
 
-1. React.FC的注解是有些问题的，在是否优先使用这个类型作为注解上存在一部分争议，因为这个类型破坏了JSX.LibraryManagedAttributes， 导致其忽略了函数和类组件的defaultsProps，displayName这样的参数 (详见：[https://github.com/typescript-cheatsheets/react/issues/87](https://link.zhihu.com/?target=https%3A//github.com/typescript-cheatsheets/react/issues/87))。另外，其不能像class组件一样返回props的children (详见：[https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33006](https://link.zhihu.com/?target=https%3A//github.com/DefinitelyTyped/DefinitelyTyped/issues/33006)) ,显式的定义children属性，或更改源码可解决这个问题。
+## React.FC
+
+React.FC的注解是有些问题的，在是否优先使用这个类型作为注解上存在一部分争议，因为这个类型破坏了JSX.LibraryManagedAttributes， 导致其忽略了函数和类组件的defaultsProps，displayName这样的参数 (详见：[https://github.com/typescript-cheatsheets/react/issues/87](https://link.zhihu.com/?target=https%3A//github.com/typescript-cheatsheets/react/issues/87))。另外，其不能像class组件一样返回props的children (详见：[https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33006](https://link.zhihu.com/?target=https%3A//github.com/DefinitelyTyped/DefinitelyTyped/issues/33006)) ,显式的定义children属性，或更改源码可解决这个问题。
 
 还有一点，FC在@types/react18之前总是隐式的定义好children，即使你的Props注解并没有定义children，你仍然可以在参数里解构出它。
 
+1. 在@types/react版本16.8和18之间可以使用React.VoidFunctionComponent或React.VFC替代 React.FC ,它规定要想在函数体内使用props必须显示的定义它
 
-
-2. 在@types/react版本16.8和18之间可以使用React.VoidFunctionComponent或React.VFC替代 React.FC ,它规定要想在函数体内使用props必须显示的定义它
-
-
-
-3. 因为编译器的限制 在函数组件中，不能返回除jsx和null以外的值，如果真的需要返回除这两种之外的值，可以使用类型断言，例如
+2. 因为编译器的限制 在函数组件中，不能返回除jsx和null以外的值，如果真的需要返回除这两种之外的值，可以使用类型断言，例如
 
 ```ts
  const MyArrayComponent = () => (Array(5).fill(<div/>) as any) as JSX.Element
 ```
 
-
-
-4. 函数组件和类组件的常用注解
+## 函数组件和类组件的常用注解
 
 ```text
 // 函数  React.FC<Props>;   
 // 类    React.Component<Props,state>
 ```
 
+## props类型
 
+- 如何开发泛型class组件，在使用的时候约束它的props类型
 
-5. 如何开发泛型class组件，在使用的时候约束它的props类型
-
-```text
+```tsx
 type SelectProps<T> = {items: T[]}; 
 
 class Select<T> extends React.Component<SelectProps<T>, {}> { 
@@ -43,14 +39,11 @@ class Select<T> extends React.Component<SelectProps<T>, {}> {
 }  
 
 const Form = () => <Select<string> items={['a','b']}>
- 
 ```
 
+- 开发泛型函数组件
 
-
-6. 开发泛型函数组件
-
-```text
+```tsx
 function foo<T>(x:T): T{    
  return x 
 } 
@@ -60,11 +53,9 @@ function foo<T>(x:T): T{
  
 ```
 
+- React.ReactElement可以通过传入泛型，来注解类或函数组件的实例化结果，相当的好用
 
-
-​	7.React.ReactElement可以通过传入泛型，来注解类或函数组件的实例化结果，相当的好用
-
-```text
+```tsx
 class MyAwesomeComponent extends React.Component {   
   render() {     
     return <div>Hello</div>;   
@@ -74,24 +65,21 @@ class MyAwesomeComponent extends React.Component {
 const foo: React.ReactElement<MyAwesomeComponent> = <MyAwesomeComponent />; // Okay 
 
 const bar: React.ReactElement<MyAwesomeComponent> = <NotMyAwesomeComponent />; // Error
- 
 ```
 
+## 如何优雅地注解useState？
 
+- 优雅地注解useState
 
-8. 优雅地注解useState
-
-```text
+```tsx
 const [user,setUser] = React.useState<IUser | null>(null);  
 
 const [user,setUser] = React.useState<IUser>({} as IUser)
 ```
 
+## reducer的注解
 
-
-9. reducer的注解
-
-```text
+```tsx
 import { Reducer } from 'redux'; 
 
 export function reducer:  Reducer<AppState, Action>() {
@@ -101,33 +89,31 @@ export function reducer:  Reducer<AppState, Action>() {
 
 
 
-​	10.优雅地注解useRef
+## 如何优雅地注解useRef
 
-```text
+```typescript jsx
 // 如果可以的话尽量使用的类型具体点 
 // 比如使用HTMLDivElement 就比HTMLElement好很多，比Element好更多 
 
 function Foo(){ 
   const divRef = useRef<HTMLDivElement>(null); 
-  return <div>etc<div/> 
+  return <div>etc<div/>;
 }
 ```
 
 
 
-​	11.类型断言
+## 类型断言
 
-```text
-1.as
-2.泛型注解(React的jsx里用不了)
-3.去除null或undefined的非空断言
-```
+1. as
+2. 泛型注解(React的jsx里用不了)
+3. 去除null或undefined的非空断言
 
+## 执行结果中注解的问题
 
+函数的执行结果在给其他变量进行赋值，会发现该变量的注解有问题
 
-12. 函数的执行结果在给其他变量进行赋值，会发现该变量的注解有问题
-
-```text
+```typescript jsx
 function fn(){
   return ['1',false] 
 }; 
@@ -135,22 +121,19 @@ function fn(){
 type AType = string[] 
 
 let a:AType = fn() // error 
-
-
-// 解决办法： 
-
-// 1.将其变为 return ['1',false] as any[] 或者 return ['1',false] as string[]，如果是只读的可以 as const 
-// 2. type Atype = (string | boolean)[],但已不符合实际意义 
-// 3. react团队推荐自定义钩子return两个以上的值时可以使用对象
 ```
 
+解决办法： 
 
+1. 将其变为 return ['1',false] as any[] 或者 return ['1',false] as string[]，如果是只读的可以 as const 
+2. type Atype = (string | boolean)[],但已不符合实际意义 
+3. react团队推荐自定义钩子return两个以上的值时可以使用对象
 
-​	13.createContext
+## 如何优雅地注解createContext
 
-```text
-type Theme = 'light' | 'dark'
-const TeemeContext = React.createContext<Theme>('dark')
+```typescript jsx
+type Theme = 'light' | 'dark';
+const TeemeContext = React.createContext<Theme>('dark');
 // 创建{}用断言  const Context = React.createContext({} as ContextState);
 
 const sampleAppContext: TeemeContext = 'light';
@@ -229,15 +212,15 @@ export function Component() {
     </label>
   );
 }
-//更好的createContextApi
-https://gist.github.com/sw-yx/f18fe6dd4c43fddb3a4971e80114a052
+// 更好的createContextApi
+// https://gist.github.com/sw-yx/f18fe6dd4c43fddb3a4971e80114a052
 ```
 
 
 
-14. useImperativeHandle, forwardRef
+## 如何优雅的注解 `useImperativeHandle`, `forwardRef`
 
-```text
+```typescript jsx
 export interface MyInputHandles {
     focus(): void;
 }
@@ -252,56 +235,47 @@ const MyInput: RefForwardingComponent<MyInputHandles, MyInputProps> = (props, re
         }
     }))
     
-    return <Input {...props} ref={inputRef}>    
+    return <Input {...props} ref={inputRef}/>    
 }
 
-export default forwardRef(MyInput)
- 
+export default forwardRef(MyInput);
 ```
 
+## 在继承 `React.Component`时，为了更好的注解`state`可以在 `React.Component<MyState>` 和 `state:MyState {}`两处做注解，因为这两处分管不同
 
+## props的注解不用标记readOnly 。 因为在添加到泛型组件时，会自动添加ReadOnly
 
-15. 在继承 React.Component时，为了更好的注解state可以在 **React.Component<MyState>** 和 **state:MyState {}**两处做注解，因为这两处分管不同
+## class组件 properties可以在声明时这样注解
 
-
-
-16. props的注解不用标记readOnly 。 因为在添加到泛型组件时，会自动添加ReadOnly
-
-
-
-17. class组件 properties可以在声明时这样注解
-
-```text
- pointer: number
-```
-
-
-
-18. getDerivedStateFromProps
-
-```text
-static getDerivedStateFromProps(props:Props, state:State): Partial<State> | null {
+```typescript jsx
+class Component extends React.Component<Props, State> {
+ pointer: number;
 }
 ```
 
+## getDerivedStateFromProps
 
-
-19. 当您需要函数的返回值确定状态时可以使用ReturnType
-
-```text
-static getDerivedStateFromProps(props:Props, state:State): Partial<State> | null {
+```typescript jsx
+class Component extends React.Component<Props, State> {
+  static getDerivedStateFromProps(props: Props, state: State): Partial<State> | null {
+  }
 }
 ```
 
+## 当您需要函数的返回值确定状态时可以使用ReturnType
 
+```typescript jsx
+class Component extends React.Component<Props, State> {
+    static getDerivedStateFromProps(props:Props, state:State): Partial<State> | null {
+    }
+}
+```
 
-20. ts中就你就可以不用写defaultProps了
+## ts中就你就可以不用写defaultProps了
 
+## 如何优雅的取出component的props的注解
 
-
-21. 如何优雅的取出component的props的注解
-
-```text
+```typescript jsx
 const GreetComponent = ({ name, age }: {name:string, age:25}) => (
   <div>{`Hello, my name is ${name}, ${age}`}</div>
 );
@@ -317,11 +291,9 @@ const TestComponent = (props: ComponentProps<typeof GreetComponent>) => {
 };
 ```
 
+## 使用type定义组件Props
 
-
-​	22.
-
-```text
+```typescript jsx
 type AppProps = {
   message: string;
   count: number;
@@ -361,12 +333,9 @@ type AppProps = {
 };
 ```
 
+## 使用`declare`声明接口
 
-
-​	23.
-
-```text
-  
+```typescript jsx
 export declare interface AppProps {
   children1: JSX.Element; // bad, doesnt account for arrays
   children2: JSX.Element | JSX.Element[]; // meh, doesn't accept strings
@@ -380,27 +349,23 @@ export declare interface AppProps {
   props: Props & React.ComponentPropsWithoutRef<"button">; // to impersonate all the props of a button element and explicitly not forwarding its ref
   props2: Props & React.ComponentPropsWithRef<MyButtonWithForwardRef>; // to impersonate all the props of MyButtonForwardedRef and explicitly forwarding its ref
 }
-
-
 ```
 
 
 
-​	24.接口与类型别名的差异
+## 接口与类型别名的差异
 
 类型别名和接口非常相似，在很多情况下你可以自由选择它们。
 
-几乎所有的功能都在interface中可用type，关键区别在于不能重新打开类型以添加新属性与始终可扩展的接口。
-
-
+几乎所有的功能都在interface中可用type，
+**关键区别**在于不能重新打开类型以添加新属性与始终可扩展的接口。
 
 ![img](https://pic3.zhimg.com/80/v2-1c7b35d9cb259409c95230844cca332e_720w.webp)
 
 
+## 当你想要使用getDerivedStateFromProps的返回值作为组建的state注解时
 
-​	25.当你想要使用getDerivedStateFromProps的返回值作为组建的state注解时
-
-```text
+```typescript jsx
 // 1. 普通情况
 class Comp extends React.Component<
   Props,
@@ -439,24 +404,22 @@ class Comp extends React.PureComponent<Props, State> {
 }
 ```
 
+## 表单事件
 
-
-26. 表单事件
-
-```text
+```typescript jsx
 // 如果不考虑性能的话，可以使用内联处理，注解将自动正确生成
 const el = (
-    <button onClick=(e=>{
-        //...
-    })/>
+  <button onClick={e => {
+    //...
+  }}/>
 )
 // 如果需要在外部定义类型
 handlerChange = (e: React.FormEvent<HTMLInputElement>): void => {
-    //
+  //
 }
 // 如果在=号的左边进行注解
 handlerChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-    //
+  //
 }
 // 如果在form里onSubmit的事件,React.SyntheticEvent,如果有自定义类型，可以使用类型断言
 <form
@@ -474,38 +437,36 @@ handlerChange: React.ChangeEventHandler<HTMLInputElement> = e => {
   <div>
     <label>
       Email:
-      <input type="email" name="email" />
+      <input type="email" name="email"/>
     </label>
   </div>
   <div>
-    <input type="submit" value="Log in" />
+    <input type="submit" value="Log in"/>
   </div>
 </form>
 ```
 
+## 事件类型列表
 
+1. AnimationEvent: css动画事件 
+2. ChangeEvent:<input>， <select>和<textarea>元素的change事件 
+3. ClipboardEvent: 复制，粘贴，剪切事件 
+4. CompositionEvent: 由于用户间接输入文本而发生的事件(例如，根据浏览器和PC的设置，如果你想在美国键盘上输入日文，可能会出现一个带有额外字符的弹出窗口)
+5. DragEvent:在设备上拖放和交互的事件 
+6. FocusEvent: 元素获得焦点的事件 
+7. FormEvent: 当表单元素得失焦点/value改变/表单提交的事件 
+8. InvalidEvent: 当输入的有效性限制失败时触发(例如<input type="number" max="10">，有人将插入数字20)
+9. KeyboardEvent: 键盘键入事件 
+10. MouseEvent: 鼠标移动事件 
+11. PointerEvent: 鼠标、笔/触控笔、触摸屏)的交互而发生的事件 
+12. TouchEvent: 用户与触摸设备交互而发生的事件 
+13. TransitionEvent: CSS Transition，浏览器支持度不高 
+14. UIEvent:鼠标、触摸和指针事件的基础事件。 
+15. WheelEvent: 在鼠标滚轮或类似的输入设备上滚动 
+16. SyntheticEvent:所有上述事件的基础事件。是否应该在不确定事件类型时使用
 
-27. 事件类型列表
+因为InputEvent在各个浏览器支持度不一样，所以可以使用KeyboardEvent代替
 
-```text
-AnimationEvent ： css动画事件
-ChangeEvent：<input>， <select>和<textarea>元素的change事件
-ClipboardEvent： 复制，粘贴，剪切事件
-CompositionEvent：由于用户间接输入文本而发生的事件(例如，根据浏览器和PC的设置，如果你想在美国键盘上输入日文，可能会出现一个带有额外字符的弹出窗口)
-DragEvent：在设备上拖放和交互的事件
-FocusEvent: 元素获得焦点的事件
-FormEvent: 当表单元素得失焦点/value改变/表单提交的事件
-InvalidEvent: 当输入的有效性限制失败时触发(例如<input type="number" max="10">，有人将插入数字20)
-KeyboardEvent: 键盘键入事件
-MouseEvent： 鼠标移动事件
-PointerEvent： 鼠标、笔/触控笔、触摸屏)的交互而发生的事件
-TouchEvent： 用户与触摸设备交互而发生的事件
-TransitionEvent： CSS Transition，浏览器支持度不高
-UIEvent：鼠标、触摸和指针事件的基础事件。
-WheelEvent: 在鼠标滚轮或类似的输入设备上滚动
-SyntheticEvent：所有上述事件的基础事件。是否应该在不确定事件类型时使用
-// 因为InputEvent在各个浏览器支持度不一样，所以可以使用KeyboardEvent代替
-```
 
 
 

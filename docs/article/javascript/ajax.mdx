@@ -1,0 +1,47 @@
+# ajax篇
+
+AJAX（Asynchronous JavaScript And XML）是一种在 Web 应用中通过异步发送 HTTP 请求向服务器获取内容，并使用这些新内容更新页面中相关的部分，而无需重新加载整个页面的 Web 开发技术。这可以让网页更具有响应性，因为只请求了需要更新的部分。
+
+AJAX 可以用于创建单页应用——那些使用 AJAX 来更新需要的内容的、由单一文档构成的一整个 Web 应用。
+
+AJAX 的核心是 XMLHttpRequest 对象，它允许 JavaScript 与服务器进行通信，而不需要重新加载整个页面。
+
+## XMLHttpRequest
+
+使用
+```javascript
+// 创建 XMLHttpRequest 对象
+var xhr = new XMLHttpRequest();
+
+// 创建请求
+xhr.open('GET', 'http://example.com/data.json');
+
+// 处理响应
+xhr.onreadystatechange = function() {
+  console.log(xhr.readyState); // 打印当前状态,会从 0 变化到 4
+  // 检查请求是否完成（当状态为4的时候请求完成）
+  if (xhr.readyState === 4) {
+    // 检查请求是否成功
+    if (xhr.status === 200) {
+      // 处理响应数据
+      var data = JSON.parse(xhr.responseText);
+      console.log(data);
+    } else {
+      console.error('请求失败');
+    }
+  }
+};
+
+// 发送请求
+xhr.send();
+```
+
+XMLHttpRequest.readyState 属性返回一个 XMLHttpRequest 代理当前所处的状态。一个 XHR 代理总是处于下列状态中的一个：
+
+| 值  | 状态 |  描述 |
+|----|-----|------|
+|0|  UNSENT  |代理被创建，但尚未调用 open() 方法。|
+|1|  OPENED  |open() 方法已经被调用。|
+|2|  HEADERS_RECEIVED  |send() 方法已经被调用，并且头部和状态已经可获得。|
+|3|  LOADING  |下载中 responseText 属性已经包含部分数据。|
+|4|  DONE  |下载操作已完成。|
