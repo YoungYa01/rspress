@@ -1,0 +1,163 @@
+# `Dom` 与 `Bom`
+
+## Dom
+
+:::tip
+
+1. DOM(Document Object Model, 文档对象模型)是W3C组织推荐的处理可扩展标记语言(XML)文档的标准编程接口。
+2. DOM是W3C组织推荐的处理可扩展标记语言(XML)文档的标准编程接口。
+
+:::
+
+常用的Dom操作有以下几种
+
+- 创建节点
+- 查询节点
+- 修改节点
+- 删除节点
+- 更新节点
+
+```js
+// 获取元素
+document.getElementById('id')
+document.getElementsByTagName('tag')
+document.getElementsByClassName('class')
+document.querySelector('.class')
+document.querySelector('#id')
+document.querySelectorAll('.class')
+
+// 创建元素
+document.createElement('div')
+
+// 删除元素
+document.removeChild('div')
+
+// 修改元素
+document.getElementById('id').innerHTML = 'hello'
+document.getElementById('id').innerText = 'hello'
+document.getElementById('id').style.color = 'red'
+document.getElementById('id').className = 'red'
+document.getElementById('id').setAttribute('class', 'red')
+document.getElementById('id').removeAttribute('class')
+document.getElementById('id').classList.add('red')
+document.getElementById('id').classList.remove('red')
+document.getElementById('id').classList.toggle('red')
+document.getElementById('id').classList.contains('red')
+document.getElementById('id').classList.replace('red', 'blue')
+document.getElementById('id').classList.forEach((item) => {
+  console.log(item)
+})
+
+// 添加元素
+document.body.appendChild(document.createElement('div'))
+document.body.insertBefore(document.createElement('div'), document.getElementById('id'))
+document.body.replaceChild(document.createElement('div'), document.getElementById('id'))
+document.body.removeChild(document.getElementById('id'))
+```
+
+## Bom
+
+:::tip
+
+1. BOM(Browser Object Model, 浏览器对象模型)是W3C组织推荐的处理浏览器窗口的标准编程接口。
+2. BOM是W3C组织推荐的处理浏览器窗口的标准编程接口。
+
+:::
+
+常用的Bom操作有以下几种
+
+- window
+- location
+- navigator
+- screen
+- history
+
+
+```js
+// 获取浏览器信息
+navigator.userAgent // 获取浏览器信息
+navigator.platform // 获取操作系统信息
+navigator.appName // 获取浏览器名称
+navigator.appVersion // 获取浏览器版本
+navigator.appCodeName // 获取浏览器代码名称
+navigator.appMinorVersion // 获取浏览器副版本号
+navigator.cookieEnabled // 获取浏览器是否允许cookie
+navigator.onLine // 获取浏览器是否在线
+navigator.javaEnabled() // 获取浏览器是否支持java
+navigator.language // 获取浏览器语言
+navigator.languages // 获取浏览器语言列表
+navigator.onLine // 获取浏览器是否在线
+navigator.platform // 获取操作系统信息
+navigator.product // 获取浏览器产品信息
+navigator.productSub // 获取浏览器产品子信息
+navigator.userAgent // 获取浏览器信息
+navigator.vendor // 获取浏览器供应商信息
+navigator.vendorSub // 获取浏览器供应商子信息
+navigator.hardwareConcurrency // 获取浏览器支持的最大并发数
+navigator.maxTouchPoints // 获取浏览器支持的最大触控数
+navigator.mediaCapabilities // 获取浏览器支持的媒体能力
+navigator.mediaDevices // 获取浏览器支持的媒体设备
+navigator.mediaSession // 获取浏览器支持的媒体会话
+navigator.mimeTypes // 获取浏览器支持的媒体类型
+navigator.onLine // 获取浏览器是否在线
+navigator.serviceWorker // 获取浏览器支持的服务 Worker
+navigator.storage // 获取浏览器支持的存储
+navigator.storageEstimate // 获取浏览器支持的存储估计
+navigator.storageQuota // 获取浏览器支持的存储配额
+navigator.userAgentData // 获取浏览器用户代理数据
+navigator.userActivation // 获取浏览器用户激活数据
+navigator.userAgentData // 获取浏览器用户代理数据
+
+// 获取地址栏信息
+location.href // 获取地址栏信息
+location.protocol // 获取地址栏协议
+location.host // 获取地址栏主机
+location.hostname // 获取地址栏主机名
+location.port // 获取地址栏端口
+location.pathname // 获取地址栏路径
+location.search // 获取地址栏参数
+location.hash // 获取地址栏锚点
+location.origin // 获取地址栏原始地址
+location.assign() // 跳转到指定地址
+location.reload() // 重新加载当前页面
+location.replace() // 替换当前页面
+
+// 获取滚动条信息
+window.scrollX // 获取滚动条水平位置
+window.scrollY // 获取滚动条垂直位置
+window.pageXOffset // 获取滚动条水平位置
+window.pageYOffset // 获取滚动条垂直位置
+window.scrollTo() // 滚动到指定位置
+window.scrollBy() // 滚动指定距离
+window.scrollByPages() // 滚动指定页数
+window.scrollByLines() // 滚动指定行数
+window.scrollToTop() // 滚动到顶部
+window.scrollToBottom() // 滚动到底部
+window.scrollToLeft() // 滚动到左侧
+window.scrollToRight() // 滚动到右侧
+window.scrollToTop() // 滚动到顶部
+
+// 获取浏览器可视区域信息
+window.innerWidth // 获取浏览器可视区域宽度
+window.innerHeight // 获取浏览器可视区域高度
+window.outerWidth // 获取浏览器可视区域宽度
+window.outerHeight // 获取浏览器可视区域高度
+window.screenX // 获取浏览器可视区域左上角横坐标
+window.screenY // 获取浏览器可视区域左上角纵坐标
+screen.width // 获取屏幕宽度
+screen.height // 获取屏幕高度
+screen.availWidth // 获取屏幕可用宽度
+screen.availHeight // 获取屏幕可用高度
+screen.colorDepth // 获取屏幕颜色深度
+screen.pixelDepth // 获取屏幕像素深度
+screen.orientation // 获取屏幕方向
+
+// history
+history.back() // 后退
+history.forward() // 前进
+history.go() // 前进或后退指定页面
+history.length // 获取历史记录长度
+history.pushState() // 添加历史记录
+history.replaceState() // 替换历史记录
+history.state // 获取当前历史记录
+```
