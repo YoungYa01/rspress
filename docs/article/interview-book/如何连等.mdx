@@ -1,0 +1,83 @@
+# 如何让a==1&&a==2&&a==3
+
+## 题目
+
+:::info
+
+> 题目很简单
+>
+> 如何使`a == 1 && a == 2 && a == 3`这个逻辑成立？
+
+:::
+
+## 解答
+
+```javascript title="index.js"
+const a = {
+  value: 1,
+  valueOf() {
+    return this.value++;
+  }
+};
+
+console.log(a == 1 && a == 2 && a == 3);
+```
+
+这是一个JavaScript类型隐式转换的问题
+
+这是因为JavaScript中的相等运算符`==`和`===`在比较对象时，会调用对象的`valueOf()`方法, 如果没有`valueOf()`方法，则直接将`a`转换为字符串进行比较，调用`toString()`方法 ，然后将结果转换为字符串进行比较。
+
+在以上代码中，`a`是一个对象，它的`valueOf()`方法会返回一个字符串，然后`==`运算符会将这个字符串转换为数字进行比较。
+
+因此，在第一次比较时，`a`的`valueOf()`方法会返回`"1"`，然后`==`运算符会将这个字符串转换为数字1进行比较，所以第一次比较的结果为`true`。
+
+在第二次比较时，`a`的`valueOf()`方法会返回`"2"`，然后`==`运算符会将这个字符串转换为数字2进行比较，所以第二次比较的结果为`true`。
+
+
+## 思考
+
+javascript的类型转换还记得多少？
+
+- 如果任一操作数是布尔值，则将其转换为数值再比较是否相等
+
+```javascript
+console.log(true == 1); // true
+```
+
+- 如果一个操作数是字符串，另一个操作数是数值，则尝试将字符串转换为数值，再比较是否相等
+
+```javascript
+console.log("1" == 1); // true
+```
+
+- 如果一个操作数是对象，另一个操作数不是，则调用对象的 value0f()方法取得其原始值，再根据前面的规则进行比较
+```javascript
+const a = {
+  valueOf() {
+    return 10086;
+  }
+};
+
+console.log(a == 10086);
+```
+
+- null和 undefined 相等
+```javascript
+console.log(null == undefined); // true
+```
+
+- NaN 不等于任何值，包括它自己
+```javascript
+console.log(NaN == NaN); // false
+```
+
+- 如果两个操作数都是对象，则比较它们是不是同一个对象。如果两个操作数都指向同一个对象，则相等操作符返回 `true`
+
+```javascript
+const obj1 = { name: 'John' };
+const obj2 = obj1;
+const obj3 = { name: 'John' };
+
+console.log(obj1 == obj2); // true
+console.log(obj1 == obj3); // false
+```
