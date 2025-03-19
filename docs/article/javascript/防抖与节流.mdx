@@ -1,0 +1,48 @@
+# 节流与防抖
+
+:::info
+
+> 节流与防抖是前端开发中常见的概念，它们在性能优化和用户体验方面具有重要作用。
+
+:::
+
+## 防抖（Debounce）
+
+防抖（debounce）是一个函数在触发指定时间后，只执行一次。在指定时间内再次触发该函数时，会重新计时，直到函数不再被触发。
+
+> 类比：王者荣耀的回城，在指定时间内再次点击回城按钮，会重新计时，直到再次点击回城按钮。
+
+```javascript
+function debounce(func, delay) {
+  let timer;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      func.apply(context, args);
+    }, delay);
+  };
+}
+```
+
+## 节流（Throttle）
+
+节流（throttle）是一个函数在指定时间内，只执行一次。在指定时间内再次触发该函数时，会直接返回上次执行的结果，而不会重新执行。
+
+> 类比：王者荣耀的技能冷却，在技能冷却时间内再次点击技能按钮，不会重新执行，需要等待冷却时间之后才能再次点击。
+
+```javascript
+function throttle(func, delay) {
+  let timer;
+  return function() {
+    const context = this;
+    const args = arguments;
+    if (!timer) {
+      timer = setTimeout(function() {
+        func.apply(context, args);
+        timer = null;
+      }, delay)}
+  }
+}
+```

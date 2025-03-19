@@ -1,0 +1,142 @@
+# 本地部署 `Deepseek`
+<img src="https://ollama.com/public/ollama.png" alt="ollama"/>
+
+::: info
+`DeepSeek` 大火，我们也来看看如何部署本地的 `DeepSeek`。
+:::
+
+> 🎉 DeepSeek-R1 已发布并开源，性能对标 OpenAI o1 正式版，在网页端、APP 和 API 全面上线。
+
+## 安装 `ollama`
+
+1. 访问 [`Ollama`](https://ollama.com/) 官网
+
+`ollama` 的图标这是一只？羊驼？
+<div style={{width: "100%", display: "flex", justifyContent: "center", flexDirection: "column"}}>
+  <img src="/ollama/ollama-install.png" alt="ollama-install" />
+</div>
+
+根据你的操作系统选择合适的安装包，我这里以 `Windows` 为例
+
+<div style={{width: "100%", display: "flex", justifyContent: "center", flexDirection: "column"}}>
+  <img src="/ollama/ollama-win.png" alt="ollama-win" />
+</div>
+
+点击 `Download` 按钮，选择 `ollama` 安装包，下载完成后解压。
+
+- `Ollama` 可以傻瓜式安装，直接运行并下一步即可。这种做法的弊端是默认安装在C盘的`C:\Users\用户\AppData\Local\Programs` 目录下，占用磁盘空间。
+
+- 也可以手动安装，可以以选择安装在任意位置，比如 `D:\ollama` 目录下。
+
+这里介绍一下如何手动安装。
+
+定位到 `OllamaSetup.exe` 所在的目录，以管理员身份运行 `CMD`
+
+```shell
+OllamaSetup.exe /DIR="D:\Ollama"
+```
+
+命令中DIR的值为 `D:\Ollama`，该值就是安装的目录位置
+
+执行上述命令后，会弹出 `OllamaSetup.exe` 安装窗体界面，此时我们点击 `Install` 按钮等待安装完成即可
+
+<div style={{width: "100%", display: "flex", justifyContent: "center", flexDirection: "column"}}>
+  <img src="/ollama/ollama-installer.png" alt="ollama-installer"/>
+</div>
+
+## 验证 `Ollama` 是否安装成功
+
+在 `powershell` 命令行中输入以下命令
+
+```shell
+ollama
+```
+
+如果显示了如下内容，则说明安装成功 🎉
+
+<div style={{width: "50%", margin: "0 auto"}}>
+  <img src="/ollama/ollama-wt.png" alt="ollama-wt"/>
+</div>
+
+## 配置 `Ollama` 安装 `DeepSeel` 位置
+
+此时可以去配置一下 `ollama` 安装 `deepseek` 的位置
+
+1. 打开系统设置 的 系统信息
+
+<div style={{width: "80%", margin: "0 auto"}}>
+  <img src="/ollama/ollama-sys.png" alt="ollama-sys" />
+</div>
+
+2. 点击 高级系统设置
+
+<div style={{width: "80%", margin: "0 auto"}}>
+  <img src="/ollama/ollama-sysinfo.png" alt="ollama-sysinfo" />
+</div>
+
+3. 点击 环境变量
+
+<div style={{width: "50%", margin: "0 auto"}}>
+  <img src="/ollama/ollama-sx.png" alt="ollama-sx" />
+</div>
+
+4. 在 系统变量 中添加以下内容，然后点击确定
+
+<div style={{width: "50%", margin: "0 auto"}}>
+  <img src="/ollama/ollama-bl.png" alt="ollama-bl" />
+</div>
+
+配置 `OLLAMA_MODELS` 变量，值为你想要安装模型的位置，
+
+```shell
+OLLAMA_MODELS = D:\Ollama\models
+```
+
+`Ollama` 服务使用环境变量 `OLLAMA_HOST` 来指定监听的地址，默认情况下，它只监听 `localhost`，即只能本地访问。如果要让局域网内其他设备访问 `Ollama` 服务，需要将 `OLLAMA_HOST` 设为 `0.0.0.0`
+
+```shell
+OLLAMA_HOST = 0.0.0.0
+```
+
+启用 `cuda` 显存加速，也就是使用 `GPU`, 前提是你的 `GPU` 支持 `CUDA`，否则不用配置
+```shell
+OLLAMA_GPU_LAYER = cuda
+```
+
+5. 重启 `powershell` 命令行即可生效
+
+## 安装 `DeepSeek`
+
+1. 访问 `Ollama` 的 [`models`](https://github.com/DeepSeek-AI/DeepSeek-R1) 官网
+
+<div style={{width: "80%", margin: "0 auto"}}>
+  <img src="/ollama/ollama-models.png" alt="ollama-models" />
+</div>
+
+2. 选择模型
+
+选择一个 `DeepSeek` 模型，越大的模型，越耗费内存，越耗时，越精准
+越小的模型，越快，精度越低，根据自己的电脑配置来选择一个合适的模型
+
+<div style={{width: "80%", margin: "0 auto"}}>
+  <img src="/ollama/ollama-ds.png" alt="ollama-ds" />
+</div>
+
+3. 安装模型
+
+在 `powershell` 命令行中输入以下命令
+
+```shell
+ollama run deepseek-r1:14b
+```
+
+这个过程需要一段时间，请耐心等待
+<div style={{width: "80%", margin: "0 auto"}}>
+  <img src="/ollama/ollama-14b.png" alt="ollama-14b" />
+</div>
+
+等待安装完成后就可以使用了
+
+> [!INFO]
+> 当然除了命令行之外，ollama还提供了请求端口 `http://localhost:11434/v1/`
+> 你可以使用 [`cherry studio`](https://cherry-ai.com/) 来进行连接

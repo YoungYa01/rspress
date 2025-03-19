@@ -1,0 +1,66 @@
+# call 、bind、apply
+
+:::tip
+
+> call、bind、apply都是函数对象的方法，用于改变函数的this指向。
+
+:::
+
+call、bind、apply的用法：
+
+## call用法
+
+```js title="call"
+// call
+function foo(...args) {
+  console.log(this.a, args);
+}
+var obj = {
+  a: 2
+};
+// call传参用剩余参数的方式
+foo.call(obj, 1, 2, 3); // 2
+```
+
+## bind用法
+
+```javascript title="bind"
+// bind
+function foo(...args) {
+  console.log(this.a, args);
+}
+var obj = {
+  a: 2
+};
+// bind传参同样使用剩余参数的方式
+var bar = foo.bind(obj, 1, 2, 3);
+// bind会返回改变了this指向的函数
+// apply和call是改变this指向，并立即执行
+bar(); // 2
+```
+
+## apply用法
+
+```javascript title="apply"
+//apply
+function foo(...args) {
+  console.log(this.a, args);
+}
+var obj = {
+  a: 2
+};
+// apply传参用数组的方式
+foo.apply(obj, [1, 2, 3]); // 2
+```
+
+## call、bind、apply的区别
+
+1. call、bind、apply都是函数对象的方法，用于改变函数的this指向。
+2. call、bind、apply的用法：
+
+   - call：call传参用剩余参数的方式
+   - bind：bind传参同样使用剩余参数的方式
+   - apply：apply传参用数组的方式
+
+3. bind 是返回绑定this之后的函数, apply 、call 则是立即执行
+

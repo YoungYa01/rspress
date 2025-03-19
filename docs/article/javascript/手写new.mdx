@@ -1,0 +1,23 @@
+# 如何手写一个new
+
+1. 创建一个空对象，并设置原型为构造函数的原型。
+
+```javascript
+  newObject.__proto__ = fn.prototype;
+```
+
+2. 将this指向这个空对象，并执行构造函数。
+
+```javascript
+  const result = fn.apply(newObject, args);
+```
+
+3. 如果构造函数返回一个对象，则返回这个对象，否则返回第一步创建的空对象。
+
+```javascript
+function myNew(fn, ...args) {
+  const obj = Object.create(fn.prototype);
+  const result = fn.apply(obj, args);
+  return result instanceof Object ? result : obj;
+}
+```

@@ -14,6 +14,7 @@ import SplashCursor from "../SplashCursor";
 import LogoWall from "../LogoWall";
 import MagnetLines from "../MagnetLines";
 import SmallGame from "../Game";
+import Tetris from "../Tetris";
 
 const AboutMe = () => {
   const [avatarSrc, setAvatarSrc] = useState<string>(`/pic${[1, 2, 3, 4].at(parseInt(String(Math.random() * 4)))}.jpg`);
@@ -118,6 +119,7 @@ const AboutMe = () => {
       {/*    ))*/}
       {/*  }*/}
       {/*</Carousel>*/}
+      {/*<Tetris/>*/}
       <SplashCursor/>
     </Watermark>
   )

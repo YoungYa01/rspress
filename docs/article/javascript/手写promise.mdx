@@ -1,0 +1,62 @@
+# 手写promise
+
+```js
+class MyPromise {
+  constructor(fn) {
+    this.state = 'pending'
+    this.value = null
+    this.resolveCallbacks = []
+    this.rejectCallbacks = []
+
+    const resolve = (value) => {
+      if (this.state === 'pending') {
+        this.state = 'fulfilled'
+        this.value = value
+        this.resolveCallbacks.forEach(fn => fn())
+      }
+    }
+
+    const reject = (value) => {
+     if (this.state === 'pending') {
+        this.state = 'rejected'
+        this.value = value
+        this.rejectCallbacks.forEach(fn => fn())
+      }
+    }
+
+    try {
+      fn(resolve, reject)
+    } catch (e) {
+      reject(e)
+    }
+  }
+  then(onFulfilled, onRejected) {
+    if (this.state === 'fulfilled') {
+      onFulfilled(this.value);
+    }
+    if (this.state === 'rejected') {
+      onRejected(this.value);
+    }
+    if (this.state === 'pending') {
+      this.resolveCallbacks.push(() => {
+        onFulfilled(this.value);
+      });
+      this.rejectCallbacks.push(() => {
+        onRejected(this.value);
+      });
+    }
+    return this;
+  }
+  catch(onRejected) {
+    return this.then(null, onRejected);
+  }
+}
+const p = new MyPromise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('success')
+  }, 1000)
+})
+p.then(res => {
+  console.log(res)
+})
+```
