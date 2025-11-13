@@ -38,8 +38,9 @@ export default defineConfig({
     lastUpdated: true,
     footer: {
       message: `
-      <span>Copyright © 2023-${new Date().getFullYear()} YoungYa</span><br>
-      <span><a href="https://beian.miit.gov.cn/">蜀ICP备2023021028号-1</a></span>
+      <span>Copyright © 2023-${new Date().getFullYear()} YoungYa <span id="update_time"></span></span><br>
+      <span><a href="https://beian.miit.gov.cn/">蜀ICP备2023021028号-2</a></span>
+      <script>document.getElementById("update_time").innerText = "Last Upadte at" + window.document.lastModified</script>
       `,
     }
   },
