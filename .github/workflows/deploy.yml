@@ -25,32 +25,39 @@ jobs:
         run: npm run build
 
       - name: Verify build output
-        run: |
-          echo "Build directory contents:"
-          ls -la doc_build/
-          echo "Checking if index.html exists:"
-          ls -la doc_build/index.html || echo "index.html not found in root, checking subdirectories..."
-          find doc_build/ -name "index.html" | head -5
+        run: ls -la doc_build/
 
-      - name: Deploy to Server
-        uses: easingthemes/ssh-deploy@v4.1.8  # 使用更新的版本
-        with:
+      - name: Setup SSH and Deploy
+        env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          DEPLOY_TARGET: ${{ secrets.DEPLOY_TARGET }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          SOURCE: "doc_build/"
-          TARGET: ${{ secrets.DEPLOY_TARGET }}
-          ARGS: "-avz --delete --chown=www-data:www-data"
-          EXCLUDE: "/node_modules/, /.git/"
-
-      - name: Verify deployment
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            echo "Deployment verification:"
-            ls -la ${{ secrets.DEPLOY_TARGET }}
-            echo "Checking if index.html is accessible:"
-            ls -la ${{ secrets.DEPLOY_TARGET }}/index.html || find ${{ secrets.DEPLOY_TARGET }} -name "index.html" | head -3
+        run: |
+          # 设置 SSH 环境
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          # 添加主机到 known_hosts
+          ssh-keyscan -H $REMOTE_HOST >> ~/.ssh/known_hosts
+          
+          echo "=== 测试 SSH 连接 ==="
+          # 测试连接 - 使用详细输出
+          ssh -v -i ~/.ssh/deploy_key $REMOTE_USER@$REMOTE_HOST "echo '✅ SSH 连接测试成功'"
+          
+          echo "=== 开始部署 ==="
+          # 使用 rsync 直接部署（不使用第三方action）
+          rsync -avz -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            --delete \
+            doc_build/ \
+            $REMOTE_USER@$REMOTE_HOST:$DEPLOY_TARGET
+          
+          echo "=== 设置文件权限 ==="
+          ssh -i ~/.ssh/deploy_key $REMOTE_USER@$REMOTE_HOST "
+            chown -R www-data:www-data $DEPLOY_TARGET
+            chmod -R 755 $DEPLOY_TARGET
+            echo '✅ 部署完成！'
+            echo '部署的文件：'
+            ls -la $DEPLOY_TARGET | head -10
+          "
