@@ -41,6 +41,7 @@ export default defineConfig({
       <span>Copyright © 2023-${new Date().getFullYear()} YoungYa <span id="update_time"></span></span><br>
       <span><a href="https://beian.miit.gov.cn/">蜀ICP备2023021028号-2</a></span>
       <script>document.getElementById("update_time").innerText = "Last Upadte at" + window.document.lastModified</script>
+      <script defer src="http://youngya.cn:3000/script.js" data-website-id="638618f2-9382-4fe6-a228-20d70f9b1a77"></script>
       `,
     }
   },
