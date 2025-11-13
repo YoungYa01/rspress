@@ -81,7 +81,7 @@ import {Link, NavLink, Route} from "react-router-dom";
 
 **路由组件可以在自身的props.match.params里接收到相应的参数**
 
-![image-20221226160225579](D:\notebook\React.assets\image-20221226160225579.png)
+[//]: # (![image-20221226160225579]&#40;D:\notebook\React.assets\image-20221226160225579.png&#41;)
 
 ## 向路由组件传递search参数
 
@@ -101,11 +101,11 @@ const {search} = this.props.location;					//？key1=value1&key2=value2&key3=valu
 const {id, title} = qs.parse(search.slice(1));
 ```
 
-![image-20221226161641131](D:\notebook\React.assets\image-20221226161641131.png)
+[//]: # (![image-20221226161641131]&#40;D:\notebook\React.assets\image-20221226161641131.png&#41;)
 
 `querystring`已经被弃用，改为`qs`即可引用成功
 
-![image-20221226163227609](D:\notebook\React.assets\image-20221226163227609.png)
+[//]: # (![image-20221226163227609]&#40;D:\notebook\React.assets\image-20221226163227609.png&#41;)
 
 ## **向路由组件传递state参数**
 
@@ -126,7 +126,7 @@ const {id, title} = qs.parse(search.slice(1));
 const {id, title} = this.props.location.state || {};
 ```
 
-![image-20221226202952601](D:\notebook\React.assets\image-20221226202952601.png)
+[//]: # (![image-20221226202952601]&#40;D:\notebook\React.assets\image-20221226202952601.png&#41;)
 
 ## push与replace模式
 
