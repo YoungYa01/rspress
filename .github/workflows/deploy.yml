@@ -1,0 +1,29 @@
+name: Deploy Blog  # 工作流名称，显示在 Actions 面板
+
+on:
+  push: # 触发条件：任何 git push 操作
+    branches:
+      - main      # 可选：仅监听 main 分支（建议明确指定）
+
+jobs:
+  build: # 任务 ID，可自定义
+    runs-on: ubuntu-latest  # 使用 GitHub 托管的 Ubuntu 运行器
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # 官方检出插件
+
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main  # 第三方 SSH 部署插件
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}  # 从仓库 Secrets 读取私钥
+          REMOTE_HOST: "youngya.cn"         # 替换为你的服务器公网 IP 或域名
+          REMOTE_USER: "root"                              # 服务器上创建的部署用户
+          SOURCE: "doc_build/"                             # 本地构建输出目录（如 Hexo 的 public）
+          TARGET: "/opt/1panel/www/sites/youngya.cn/index"            # 服务器目标目录
+          ARGS: "-avz --chown=git:git"                    # rsync 参数：归档、压缩、设置属主
