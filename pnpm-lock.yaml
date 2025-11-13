@@ -17,6 +17,9 @@ importers:
       '@excalidraw/excalidraw':
         specifier: ^0.17.6
         version: 0.17.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@js-preview/pdf':
+        specifier: ^2.0.10
+        version: 2.0.10
       '@react-spring/web':
         specifier: ^9.7.5
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -257,6 +260,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@js-preview/pdf@2.0.10':
+    resolution: {integrity: sha512-S1PYUIfHQGPqEwgGk8TQ8wf5rec2ubE7nixSd0iQGO7ecm+B7BNkAAPkotnUCNAaDo16NL+fw07mblhU3t9eZw==}
 
   '@loadable/component@5.16.4':
     resolution: {integrity: sha512-fJWxx9b5WHX90QKmizo9B+es2so8DnBthI1mbflwCoOyvzEwxiZ/SVDCTtXEnHG72/kGBdzr297SSIekYtzSOQ==}
@@ -3142,6 +3148,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@js-preview/pdf@2.0.10': {}
 
   '@loadable/component@5.16.4(react@18.3.1)':
     dependencies:
