@@ -8,9 +8,5 @@
     "text": "关于",
     "link": "/about",
     "activeMatch": "/about/"
-  },
-  {
-    "text": "旧版",
-    "link": "/blank/"
   }
 ]
