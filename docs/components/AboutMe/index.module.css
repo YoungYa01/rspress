@@ -1,0 +1,49 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* 2. 确保自定义光标不拦截鼠标事件 */
+.custom-cursor {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    mix-blend-mode: difference; /* 关键：遇白变黑，遇黑变白，高级感的来源 */
+}
+/* 隐藏滚动条但保留功能 */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+/* 简单的无限滚动动画 */
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+    animation: marquee 20s linear infinite;
+}
+
+/* 确保 Lenis 不会和 ScrollTrigger 冲突 */
+html.lenis {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+    pointer-events: none;
+}

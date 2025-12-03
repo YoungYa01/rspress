@@ -48,7 +48,7 @@ const routes: RouteObject[] = Object.entries(pageModule).map(([pagePath, config]
 ```typescript jsx
 const routes: RouteObject[] = Object.entries(pageModule).map(([pagePath, config]) => {
   // 分隔路由路径
-  let path = pagePath.replace('../page', '').replace('/index.tsx', '') || '/';
+  let path = pagePath.replace('../page', '').replace('/index.mdx', '') || '/';
   // 此处可自行修改为所需要的格式
   // 规定格式 例：/HomePage → /home-page
   path = path.split('').map((s, index) =>
@@ -107,7 +107,7 @@ const comModule = import.meta.glob('../page/**/*.tsx');
 // 创建路由
 const routes: RouteObject[] = Object.entries(pageModule).map(([pagePath]) => {
   // 分隔路由路径
-  let path = pagePath.replace('../page', '').replace('/index.tsx', '') || '/';
+  let path = pagePath.replace('../page', '').replace('/index.mdx', '') || '/';
   // 规定格式 例：/HomePage → /home-page
   path = path.split('').map((s, index) => {
     // 分隔处理
