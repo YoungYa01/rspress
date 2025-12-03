@@ -43,7 +43,7 @@ const AboutMe = () => {
 
   const IconList = () => {
     return (
-      <div>
+      <div className={'flex justify-center items-center'}>
         {/*<SmileIcon/>*/}
         {/*<FlowerIcon/>*/}
         <SunFlowerIcon/>
@@ -53,7 +53,7 @@ const AboutMe = () => {
 
   return (
     <Watermark content="YoungYa">
-      <div className={'w-full bg-blue-800 flex justify-center items-center'}>
+      <div className={'w-full flex justify-center items-center'}>
         <div>
           <Avatar size={{xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100}} onClick={handleClick}
                   style={{cursor: 'pointer'}}>
@@ -82,7 +82,11 @@ const AboutMe = () => {
             color: '#7cb305',
             textDecoration: 'underline',
             fontSize: '2.5rem'
-          }}>SWUST</a></span>
+          }}>SWUST</a>&nbsp;&nbsp; &&nbsp;&nbsp; <a href="https://www.swjtu.edu.cn/" style={{
+            color: '#7cb305',
+            textDecoration: 'underline',
+            fontSize: '2.5rem'
+          }}>SWJTU</a></span>
         }
       />
       <Divider variant="dotted" style={{borderColor: '#7cb305'}}>
